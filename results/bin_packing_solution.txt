@@ -1,0 +1,1 @@
+# Placeholder — ejecutar models/bin_packing.py para generar este archivo

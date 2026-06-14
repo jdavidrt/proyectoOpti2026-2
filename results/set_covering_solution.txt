@@ -1,0 +1,1 @@
+# Placeholder — ejecutar models/set_covering.py para generar este archivo
