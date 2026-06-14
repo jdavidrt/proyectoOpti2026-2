@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Optimization Dashboard - BPP & SCP</title>
+<style>
+  :root{
+    --bg:#0f1419; --panel:#171d26; --panel-2:#1d2530; --line:#2a3340;
+    --text:#e6edf3; --muted:#8b98a8; --accent:#4f8cff; --accent-2:#22c55e;
+    --warn:#f59e0b; --danger:#ef4444; --chip:#222c39;
+    --radius:12px; --shadow:0 1px 0 rgba(255,255,255,.03), 0 8px 24px rgba(0,0,0,.35);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:"Cascadia Code",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.5}
+  a{color:var(--accent)}
+  header.app{padding:24px 28px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#131922,#0f1419)}
+  header.app h1{margin:0;font-size:22px;letter-spacing:.2px}
+  header.app .sub{color:var(--muted);font-size:13.5px;margin-top:4px}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .badge{font-size:12px;padding:5px 10px;border-radius:999px;background:var(--chip);border:1px solid var(--line);color:var(--muted)}
+  .badge b{color:var(--text);font-weight:600}
+  .badge.live{border-color:#1f6f43;color:#9be3b6;background:#11241a}
+  .badge.saved{border-color:#7a5a16;color:#f3cf8f;background:#241d10}
+  nav.tabs{display:flex;gap:4px;padding:0 28px;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:5}
+  nav.tabs button{appearance:none;background:none;border:none;color:var(--muted);font:inherit;font-size:14.5px;padding:14px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  nav.tabs button:hover{color:var(--text)}
+  nav.tabs button.active{color:var(--text);border-bottom-color:var(--accent)}
+  main{padding:24px 28px 60px;max-width:1180px;margin:0 auto}
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  h2.section{font-size:16px;margin:26px 0 12px;color:var(--text);font-weight:600;display:flex;align-items:center;gap:8px}
+  h2.section .hint{font-size:12.5px;color:var(--muted);font-weight:400}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+  .card .k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  .card .v{font-size:24px;font-weight:650;margin-top:6px}
+  .card .v small{font-size:13px;color:var(--muted);font-weight:500}
+  .card.good .v{color:var(--accent-2)} .card.accent .v{color:var(--accent)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:12.5px;margin:6px 0 14px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  /* weight chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-family:var(--mono);font-size:12px;color:var(--text);display:flex;flex-direction:column;align-items:center;min-width:42px}
+  .chip .id{color:var(--muted);font-size:10px}
+  .chip.dim{opacity:.32}
+  .chip.sel{border-color:var(--accent);background:#142036;color:#bcd4ff}
+  /* bins */
+  .bin{margin:10px 0}
+  .bin .meta{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:4px}
+  .bin .meta b{color:var(--text)}
+  .track{position:relative;height:30px;background:var(--panel-2);border:1px solid var(--line);border-radius:7px;overflow:hidden;display:flex}
+  .seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#0b0f14;font-weight:600;border-right:1px solid rgba(0,0,0,.25);overflow:hidden;white-space:nowrap}
+  .util-bar{height:6px;border-radius:4px;background:var(--panel-2);overflow:hidden;margin-top:5px}
+  .util-bar > div{height:100%}
+  /* table */
+  table{border-collapse:collapse;width:100%;font-size:13.5px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+  tbody tr:hover{background:var(--panel-2)}
+  .toolbar{display:flex;gap:8px;margin:6px 0 14px}
+  .toolbar button{background:var(--chip);border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
+  .toolbar button.active{border-color:var(--accent);color:var(--text);background:#142036}
+  canvas{max-width:100%;display:block;background:var(--panel-2);border-radius:8px;border:1px solid var(--line)}
+  .grid2{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:900px){.grid2{grid-template-columns:1.3fr 1fr}}
+  footer{color:var(--muted);font-size:12px;text-align:center;padding:22px;border-top:1px solid var(--line)}
+  .note{font-size:12.5px;color:var(--muted);margin-top:8px}
+  details summary{cursor:pointer;color:var(--muted);font-size:13px;margin:8px 0}
+  .svgwrap{width:100%;overflow-x:auto}
+</style>
+</head>
+<body>
+<header class="app">
+  <h1>Optimization Dashboard</h1>
+  <div class="sub">Universidad Nacional de Colombia - Optimizacion 2026-1 - Bin Packing &amp; Set Covering (Gurobi ILP)</div>
+  <div class="badges" id="badges"></div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button data-tab="bpp" class="active">Bin Packing</button>
+  <button data-tab="scp">Set Covering</button>
+  <button data-tab="sens">Sensitivity</button>
+</nav>
+
+<main>
+  <section class="tab active" id="tab-bpp">
+    <h2 class="section">Solution summary</h2>
+    <div class="cards" id="bpp-cards"></div>
+
+    <h2 class="section">Packed bins <span class="hint">each track = one bin (full width = capacity); colored segments = items</span></h2>
+    <div class="legend">
+      <span><i style="background:var(--accent)"></i>item (width proportional to weight)</span>
+      <span><i style="background:var(--panel-2);border:1px solid var(--line)"></i>free capacity</span>
+    </div>
+    <div class="panel" id="bpp-bins"></div>
+
+    <h2 class="section">Source data <span class="hint">item weights from the instance file</span></h2>
+    <div class="panel">
+      <div class="note" id="bpp-data-note"></div>
+      <div class="chips" id="bpp-weights" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-scp">
+    <h2 class="section">Solution summary</h2>
+    <div class="cards" id="scp-cards"></div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div>
+        <h2 class="section">Coverage matrix <span class="hint">rows x columns; selected columns highlighted</span></h2>
+        <div class="legend">
+          <span><i style="background:#36506e"></i>cell covered by a column</span>
+          <span><i style="background:var(--accent)"></i>cell covered by a selected column</span>
+          <span><i style="background:#1b2a44"></i>selected column band</span>
+        </div>
+        <div class="panel"><canvas id="scp-canvas" height="320"></canvas></div>
+      </div>
+      <div>
+        <h2 class="section">Selected columns <span class="hint">the chosen cover</span></h2>
+        <div class="panel">
+          <div class="chips" id="scp-selected"></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section">Source data <span class="hint">column costs from the instance file</span></h2>
+    <div class="panel">
+      <div class="note" id="scp-data-note"></div>
+      <details><summary id="scp-costs-summary">Show all column costs</summary>
+        <div class="chips" id="scp-costs" style="margin-top:10px"></div>
+      </details>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-sens">
+    <h2 class="section">Capacity sensitivity <span class="hint">Bin Packing: how the optimum changes as bin capacity varies</span></h2>
+    <div class="toolbar" id="sens-toolbar">
+      <button data-metric="bins_used" class="active">Bins used</button>
+      <button data-metric="solve_time_s">Solve time (s)</button>
+    </div>
+    <div class="panel svgwrap"><div id="sens-chart"></div></div>
+
+    <h2 class="section">Sweep data</h2>
+    <div class="panel"><table id="sens-table"></table></div>
+  </section>
+</main>
+
+<footer>
+  Generated by <span class="mono">dashboard/build_dashboard.py</span> - self-contained, offline. Re-run the generator to refresh results.
+</footer>
+
+<script>window.__DASHBOARD_DATA__ = __DATA_JSON__;</script>
+<script>
+(function(){
+  const D = window.__DASHBOARD_DATA__ || {};
+  const $ = (s,r=document)=>r.querySelector(s);
+  const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e;};
+  const PALETTE=['#4f8cff','#22c55e','#f59e0b','#ef4444','#a78bfa','#06b6d4','#ec4899','#84cc16','#f97316','#14b8a6'];
+
+  /* ---------- header badges ---------- */
+  (function(){
+    const b=$('#badges'); const m=D.meta||{};
+    const src=(m.source==='live');
+    b.append(badge((src?'live':'saved'),'Source', src?'Live solve':'Saved results'));
+    b.append(badge('','License', m.license_mode||'unknown'));
+    b.append(badge('','Generated', m.generated||'-'));
+    if(m.solve_log && m.solve_log.length){
+      const d=el('span','badge'); d.title=m.solve_log.join('\n'); d.innerHTML='<b>log</b> hover for details'; b.append(d);
+    }
+    function badge(extra,k,v){const e=el('span','badge '+extra); e.innerHTML='<b>'+k+'</b> '+v; return e;}
+  })();
+
+  /* ---------- tabs ---------- */
+  $('#tabs').addEventListener('click',e=>{
+    const t=e.target.closest('button'); if(!t)return;
+    document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('active',x===t));
+    document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active', s.id==='tab-'+t.dataset.tab));
+    if(t.dataset.tab==='scp') drawCoverage();
+  });
+
+  /* ---------- helpers ---------- */
+  function card(k,v,sub,cls){const c=el('div','card '+(cls||''));c.append(el('div','k',k));const vv=el('div','v');vv.textContent=v;if(sub){const s=el('small');s.textContent=' '+sub;vv.append(s);}c.append(vv);return c;}
+  function fmtPct(x){return (x==null||isNaN(x))?'-':(x).toFixed(2)+'%';}
+
+  /* ---------- BPP ---------- */
+  (function(){
+    const p=D.bpp||{}; const C=p.capacity||0;
+    const cards=$('#bpp-cards');
+    cards.append(card('Status', p.status||'-','', p.status==='OPTIMAL'?'good':''));
+    cards.append(card('Bins used', p.bins_used!=null?p.bins_used:'-','', 'accent'));
+    cards.append(card('Items solved', (p.items_solved!=null?p.items_solved:'-'), p.n_full?('/ '+p.n_full):''));
+    cards.append(card('Capacity', C,''));
+    cards.append(card('MIP gap', fmtPct(p.gap)));
+    cards.append(card('Solve time', (p.solve_time!=null?p.solve_time.toFixed(2):'-'),'s'));
+
+    // bins
+    const wrap=$('#bpp-bins');
+    (p.bins||[]).forEach(bn=>{
+      const row=el('div','bin');
+      const meta=el('div','meta');
+      const pct=C? Math.round(bn.load/C*100):0;
+      meta.innerHTML='<span>Bin <b>'+bn.id+'</b> &nbsp; '+bn.items.length+' items</span><span><b>'+bn.load+'</b> / '+C+' &nbsp; ('+pct+'%)</span>';
+      row.append(meta);
+      const track=el('div','track');
+      bn.items.forEach((it,k)=>{
+        const w=(p.weights&&p.weights[it]!=null)?p.weights[it]:0;
+        const seg=el('div','seg');
+        seg.style.width=(C? (w/C*100):0)+'%';
+        seg.style.background=PALETTE[k%PALETTE.length];
+        seg.title='item '+it+'  weight '+w;
+        seg.textContent=(w/C*100>5)? it : '';
+        track.append(seg);
+      });
+      row.append(track);
+      const ub=el('div','util-bar'); const f=el('div'); f.style.width=pct+'%';
+      f.style.background= pct>=95?'var(--accent-2)':(pct>=80?'var(--accent)':'var(--warn)');
+      ub.append(f); row.append(ub);
+      wrap.append(row);
+    });
+    if(!(p.bins||[]).length){wrap.append(el('div','note','No bin assignments found in results.'));}
+
+    // weights
+    const note=$('#bpp-data-note');
+    const solved=p.items_solved||0;
+    note.textContent = (p.n_full&&solved&&solved<p.n_full)
+      ? ('Instance has '+p.n_full+' items; under the current license only the first '+solved+' were solved (dimmed = not in this run).')
+      : ('Instance has '+(p.n_full||(p.weights||[]).length)+' items.');
+    const cont=$('#bpp-weights');
+    (p.weights||[]).forEach((w,i)=>{
+      const c=el('div','chip'+(i>=solved&&solved?' dim':''));
+      c.append(el('span','id','#'+i)); c.append(document.createTextNode(w));
+      cont.append(c);
+    });
+  })();
+
+  /* ---------- SCP ---------- */
+  let coverageDrawn=false;
+  function drawCoverage(){
+    if(coverageDrawn) return; coverageDrawn=true;
+    const p=D.scp||{}; const cv=$('#scp-canvas'); if(!cv) return;
+    const m=p.m||0, n=p.n||0, cov=p.coverage||[], sel=new Set(p.selected||[]);
+    const cssW=cv.parentElement.clientWidth-2; const cssH=320;
+    const dpr=window.devicePixelRatio||1;
+    cv.style.width=cssW+'px'; cv.style.height=cssH+'px';
+    cv.width=cssW*dpr; cv.height=cssH*dpr;
+    const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+    const padL=34, padT=10, padB=18, padR=8;
+    const gW=cssW-padL-padR, gH=cssH-padT-padB;
+    const cw=gW/n, ch=gH/m;
+    ctx.clearRect(0,0,cssW,cssH);
+    // selected column bands
+    ctx.fillStyle='#1b2a44';
+    sel.forEach(j=>{ ctx.fillRect(padL+j*cw, padT, Math.max(cw,1.2), gH); });
+    // covered cells
+    for(let i=0;i<m;i++){
+      const cols=cov[i]||[];
+      for(const j of cols){
+        ctx.fillStyle = sel.has(j)? '#4f8cff' : '#36506e';
+        ctx.fillRect(padL+j*cw, padT+i*ch, Math.max(cw,1), Math.max(ch,1));
+      }
+    }
+    // axes labels
+    ctx.fillStyle='#8b98a8'; ctx.font='10px '+getComputedStyle(document.body).fontFamily;
+    ctx.fillText('row 1', 2, padT+8); ctx.fillText('row '+m, 2, padT+gH);
+    ctx.fillText('col 1', padL, cssH-4); ctx.fillText('col '+n, padL+gW-26, cssH-4);
+  }
+  (function(){
+    const p=D.scp||{};
+    const cards=$('#scp-cards');
+    cards.append(card('Status', p.status||'-','', p.status==='OPTIMAL'?'good':''));
+    cards.append(card('Total cost', p.total_cost!=null?p.total_cost:'-','', 'accent'));
+    cards.append(card('Columns selected', p.num_selected!=null?p.num_selected:'-', p.n?('/ '+p.n):''));
+    cards.append(card('Rows', p.m!=null?p.m:'-'));
+    cards.append(card('MIP gap', fmtPct(p.gap)));
+    cards.append(card('Solve time', (p.solve_time!=null?p.solve_time.toFixed(2):'-'),'s'));
+
+    const selCont=$('#scp-selected');
+    (p.selected||[]).forEach(j=>{
+      const c=el('div','chip sel');
+      c.append(el('span','id','col '+j));
+      c.append(document.createTextNode((p.costs&&p.costs[j]!=null)?('cost '+p.costs[j]):''));
+      selCont.append(c);
+    });
+    if(!(p.selected||[]).length) selCont.append(el('div','note','No selected columns found.'));
+
+    $('#scp-data-note').textContent='Matrix '+(p.m||'?')+' rows x '+(p.n||'?')+' columns; objective minimizes total cost of selected columns covering every row.';
+    $('#scp-costs-summary').textContent='Show all '+((p.costs||[]).length)+' column costs';
+    const cc=$('#scp-costs');
+    (p.costs||[]).forEach((w,i)=>{
+      const c=el('div','chip'+(new Set(p.selected||[]).has(i)?' sel':''));
+      c.append(el('span','id','#'+i)); c.append(document.createTextNode(w));
+      cc.append(c);
+    });
+  })();
+
+  /* ---------- Sensitivity ---------- */
+  let sensMetric='bins_used';
+  function drawSens(){
+    const rows=(D.sens||[]).slice().sort((a,b)=>a.capacity-b.capacity);
+    const host=$('#sens-chart'); host.innerHTML='';
+    if(!rows.length){host.append(el('div','note','No sensitivity data.'));return;}
+    const W=820,H=320,padL=56,padR=20,padT=18,padB=44;
+    const xs=rows.map(r=>r.capacity), ys=rows.map(r=>r[sensMetric]);
+    const xmin=Math.min(...xs),xmax=Math.max(...xs);
+    const ymin=0,ymax=Math.max(...ys)*1.15||1;
+    const X=v=>padL+(v-xmin)/((xmax-xmin)||1)*(W-padL-padR);
+    const Y=v=>H-padB-(v-ymin)/((ymax-ymin)||1)*(H-padT-padB);
+    const NS='http://www.w3.org/2000/svg';
+    const svg=document.createElementNS(NS,'svg');
+    svg.setAttribute('viewBox','0 0 '+W+' '+H); svg.setAttribute('width','100%');
+    const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+    // gridlines y
+    const ticks=5;
+    for(let i=0;i<=ticks;i++){
+      const val=ymin+(ymax-ymin)*i/ticks; const y=Y(val);
+      svg.append(mk('line',{x1:padL,y1:y,x2:W-padR,y2:y,stroke:'#2a3340','stroke-width':1}));
+      const tl=mk('text',{x:padL-8,y:y+4,fill:'#8b98a8','font-size':11,'text-anchor':'end'});
+      tl.textContent=(sensMetric==='solve_time_s')?val.toFixed(2):Math.round(val);
+      svg.append(tl);
+    }
+    // x labels
+    rows.forEach(r=>{const x=X(r.capacity);
+      const tl=mk('text',{x:x,y:H-padB+18,fill:'#8b98a8','font-size':11,'text-anchor':'middle'});
+      tl.textContent=r.capacity; svg.append(tl);
+    });
+    const xl=mk('text',{x:(padL+W-padR)/2,y:H-6,fill:'#8b98a8','font-size':12,'text-anchor':'middle'}); xl.textContent='bin capacity'; svg.append(xl);
+    const yl=mk('text',{x:14,y:(padT+H-padB)/2,fill:'#8b98a8','font-size':12,'text-anchor':'middle',transform:'rotate(-90 14 '+((padT+H-padB)/2)+')'});
+    yl.textContent=(sensMetric==='bins_used')?'bins used':'solve time (s)'; svg.append(yl);
+    // area + line
+    let d='';
+    rows.forEach((r,i)=>{d+=(i?'L':'M')+X(r.capacity)+' '+Y(r[sensMetric])+' ';});
+    svg.append(mk('path',{d:d,fill:'none',stroke:'#4f8cff','stroke-width':2.5,'stroke-linejoin':'round'}));
+    rows.forEach(r=>{
+      const c=mk('circle',{cx:X(r.capacity),cy:Y(r[sensMetric]),r:4,fill:'#0f1419',stroke:'#4f8cff','stroke-width':2});
+      const tt=document.createElementNS(NS,'title'); tt.textContent='cap '+r.capacity+' -> '+r[sensMetric]; c.append(tt);
+      svg.append(c);
+      const vl=mk('text',{x:X(r.capacity),y:Y(r[sensMetric])-10,fill:'#e6edf3','font-size':10.5,'text-anchor':'middle'});
+      vl.textContent=(sensMetric==='solve_time_s')?r[sensMetric].toFixed(2):r[sensMetric]; svg.append(vl);
+    });
+    host.append(svg);
+  }
+  $('#sens-toolbar').addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b)return;
+    sensMetric=b.dataset.metric;
+    document.querySelectorAll('#sens-toolbar button').forEach(x=>x.classList.toggle('active',x===b));
+    drawSens();
+  });
+  (function(){
+    const rows=(D.sens||[]).slice().sort((a,b)=>a.capacity-b.capacity);
+    const t=$('#sens-table');
+    t.innerHTML='<thead><tr><th>Capacity</th><th>Bins used</th><th>Solve time (s)</th><th>MIP gap (%)</th></tr></thead>';
+    const tb=el('tbody');
+    rows.forEach(r=>{const tr=el('tr');
+      tr.innerHTML='<td>'+r.capacity+'</td><td>'+r.bins_used+'</td><td>'+(r.solve_time_s!=null?r.solve_time_s.toFixed(4):'-')+'</td><td>'+(r.mip_gap_pct!=null?r.mip_gap_pct.toFixed(4):'-')+'</td>';
+      tb.append(tr);});
+    t.append(tb);
+    drawSens();
+  })();
+
+  window.addEventListener('resize',()=>{coverageDrawn=false; if($('#tab-scp').classList.contains('active')) drawCoverage();});
+})();
+</script>
+</body>
+</html>

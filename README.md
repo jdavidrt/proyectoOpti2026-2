@@ -122,6 +122,36 @@ python models/set_covering.py
 python sensitivity/sensitivity_analysis.py
 ```
 
+## Interfaz visual (Dashboard)
+
+Una interfaz simple, **autocontenida y sin servidor**, para ver los datos de entrada,
+elegir el problema y revisar los resultados.
+
+```powershell
+# 1. (Opcional) Resolver en vivo y regenerar el dashboard.
+#    Intenta resolver con Gurobi; si no hay licencia/solver, reutiliza results/.
+python dashboard/build_dashboard.py
+
+#    Solo reconstruir desde los resultados ya guardados (sin resolver):
+python dashboard/build_dashboard.py --no-solve
+
+# 2. Abrir el resultado (doble clic, o):
+start dashboard/dashboard.html
+```
+
+`dashboard/dashboard.html` es un único archivo HTML (sin internet, sin dependencias)
+con tres pestañas:
+
+| Pestaña | Contenido |
+|---------|-----------|
+| **Bin Packing** | Resumen, contenedores empacados (cada barra = un bin, segmentos = ítems) y pesos de la instancia |
+| **Set Covering** | Resumen, matriz de cobertura (filas x columnas, columnas elegidas resaltadas) y costos |
+| **Sensitivity** | Curva capacidad vs. bins (y tiempo de solución) más la tabla del barrido |
+
+El flujo **live solve + fallback** ocurre al ejecutar `build_dashboard.py`: con la licencia
+académica resuelve la instancia completa de 120 ítems; con la trial cae al modo reducido de
+40 ítems; sin Gurobi reutiliza lo que haya en `results/`. El HTML resultante es estático.
+
 ## Licencia Gurobi — estado actual (temporal)
 
 > ⚠️ **Estamos usando una licencia TRIAL (limitada a ~2000 variables).** Se actualizará a la
