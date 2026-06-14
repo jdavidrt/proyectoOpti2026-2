@@ -38,9 +38,23 @@ def load_bin_packing(filepath: str) -> tuple[int, int, list[int]]:
 # Model
 # ---------------------------------------------------------------------------
 
-def solve_bin_packing(data_path: str, results_path: str) -> None:
+def solve_bin_packing(data_path: str, results_path: str, item_limit: int | None = None) -> None:
     n, C, w = load_bin_packing(data_path)
-    print(f"Instance: {n} items, bin capacity = {C}")
+    n_full = n
+
+    # --- TRIAL-LICENSE REDUCTION --------------------------------------------
+    # The size-limited (trial / pip) Gurobi license caps the model at ~2000
+    # variables. The full instance needs n*n + n binary vars, which exceeds that
+    # cap. When running under the trial license we therefore solve only the first
+    # `item_limit` items. Pass item_limit=None (academic license) for the full
+    # instance. The toggle lives in __main__ — see the LICENSE SWITCH block.
+    trial_mode = item_limit is not None and item_limit < n
+    if trial_mode:
+        n = item_limit
+        w = w[:n]
+
+    print(f"Instance: {n} items, bin capacity = {C}"
+          + (f"  [TRIAL MODE: reduced from {n_full} items]" if trial_mode else ""))
 
     # Upper bound on bins needed: n (one item per bin)
     J = list(range(n))
@@ -109,6 +123,11 @@ def solve_bin_packing(data_path: str, results_path: str) -> None:
         f.write(f"Bin Packing Solution\n")
         f.write(f"{'='*40}\n")
         f.write(f"Instance     : {data_path}\n")
+        if trial_mode:
+            f.write(f"License mode : TRIAL (size-limited) - solved first {n} of {n_full} items\n")
+            f.write(f"               TODO 2026-06-15: with academic license set ITEM_LIMIT=None to solve all {n_full} items\n")
+        else:
+            f.write(f"License mode : FULL - complete {n_full}-item instance (academic license)\n")
         f.write(f"Items        : {n}\n")
         f.write(f"Capacity     : {C}\n")
         f.write(f"Status       : {status_str}\n")
@@ -135,4 +154,18 @@ if __name__ == "__main__":
     base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     data_path    = os.path.join(base, "data",    "BinPacking_u120_01.txt")
     results_path = os.path.join(base, "results", "bin_packing_solution.txt")
-    solve_bin_packing(data_path, results_path)
+
+    # ============================ LICENSE SWITCH ============================
+    # The full 120-item BPP needs 120*120 + 120 = 14,520 binary variables, which
+    # EXCEEDS the size-limited trial / pip Gurobi license (~2000 vars).
+    #
+    #   TRIAL license    ->  ITEM_LIMIT = 40    (40*40 + 40 = 1,640 vars < 2000)
+    #   ACADEMIC license ->  ITEM_LIMIT = None  (full 120-item instance)
+    #
+    # TODO(2026-06-15): after activating the academic Named-User license on the
+    # UNAL campus network, change the line below to `ITEM_LIMIT = None` to solve
+    # the complete instance. No other change is required.
+    # ========================================================================
+    ITEM_LIMIT = 40
+
+    solve_bin_packing(data_path, results_path, item_limit=ITEM_LIMIT)

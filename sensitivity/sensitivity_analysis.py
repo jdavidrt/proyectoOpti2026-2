@@ -78,8 +78,20 @@ def solve_bpp_with_capacity(n: int, w: list[int], C: int, time_limit: int = 120)
 # Main sensitivity loop
 # ---------------------------------------------------------------------------
 
-def run_sensitivity(data_path: str, results_dir: str) -> None:
+def run_sensitivity(data_path: str, results_dir: str, item_limit: int | None = None) -> None:
     n, _C0, w = load_bin_packing(data_path)
+    n_full = n
+
+    # --- TRIAL-LICENSE REDUCTION (mirrors models/bin_packing.py) -------------
+    # The trial / pip Gurobi license caps the model at ~2000 variables. Each
+    # capacity solve builds n*n + n binary vars, so under the trial license we
+    # sweep a reduced subset of items. Pass item_limit=None (academic license)
+    # to sweep the complete 120-item instance.
+    trial_mode = item_limit is not None and item_limit < n
+    if trial_mode:
+        n = item_limit
+        w = w[:n]
+        print(f"[TRIAL MODE] Reduced instance: {n} of {n_full} items")
     print(f"Loaded instance: {n} items")
 
     capacities = list(range(100, 201, 10))
@@ -99,7 +111,10 @@ def run_sensitivity(data_path: str, results_dir: str) -> None:
 
     # --- Plot ---
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-    fig.suptitle("Bin Packing — Sensitivity Analysis: Bin Capacity", fontsize=14)
+    title = "Bin Packing — Sensitivity Analysis: Bin Capacity"
+    if trial_mode:
+        title += f"  (TRIAL license: {n} of {n_full} items)"
+    fig.suptitle(title, fontsize=14)
 
     # Subplot 1: bins used vs capacity
     axes[0].plot(caps, bins_list, marker="o", color="steelblue", linewidth=2)
@@ -149,4 +164,17 @@ if __name__ == "__main__":
     base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     data_path   = os.path.join(base, "data",    "BinPacking_u120_01.txt")
     results_dir = os.path.join(base, "results")
-    run_sensitivity(data_path, results_dir)
+
+    # ============================ LICENSE SWITCH ============================
+    # Same constraint as models/bin_packing.py: the trial / pip Gurobi license
+    # is limited to ~2000 vars, so we sweep a reduced item subset for now.
+    #
+    #   TRIAL license    ->  ITEM_LIMIT = 40    (40*40 + 40 = 1,640 vars < 2000)
+    #   ACADEMIC license ->  ITEM_LIMIT = None  (full 120-item instance)
+    #
+    # TODO(2026-06-15): set `ITEM_LIMIT = None` after activating the academic
+    # license to run the full sensitivity sweep.
+    # ========================================================================
+    ITEM_LIMIT = 40
+
+    run_sensitivity(data_path, results_dir, item_limit=ITEM_LIMIT)

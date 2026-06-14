@@ -1,1 +1,28 @@
-# Placeholder â€” ejecutar models/bin_packing.py para generar este archivo
+Bin Packing Solution
+========================================
+Instance     : C:\Users\jdk_l\OneDrive\Documents\UNAL\Optimización\Proyecto\opti_caso_2026\data\BinPacking_u120_01.txt
+License mode : TRIAL (size-limited) - solved first 40 of 120 items
+               TODO 2026-06-15: with academic license set ITEM_LIMIT=None to solve all 120 items
+Items        : 40
+Capacity     : 150
+Status       : OPTIMAL
+Bins used    : 15
+MIP gap      : 0.0000%
+Solve time   : 0.07s
+
+Bin assignments:
+  Bin   0: items=[15, 18, 24], load=149/150
+  Bin   1: items=[8, 11, 25], load=150/150
+  Bin   2: items=[20, 28, 30], load=148/150
+  Bin   3: items=[1, 12, 32, 36, 38], load=148/150
+  Bin   4: items=[21, 23], load=137/150
+  Bin   5: items=[29, 37], load=142/150
+  Bin   6: items=[5, 17], load=134/150
+  Bin   7: items=[3, 6, 13, 35], load=148/150
+  Bin   8: items=[19, 26], load=146/150
+  Bin   9: items=[0, 14, 33], load=128/150
+  Bin  10: items=[10, 27, 31], load=149/150
+  Bin  11: items=[4, 7], load=137/150
+  Bin  12: items=[22, 39], load=138/150
+  Bin  13: items=[16, 34], load=147/150
+  Bin  14: items=[2, 9], load=150/150

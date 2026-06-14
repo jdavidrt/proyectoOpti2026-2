@@ -1,1 +1,12 @@
-# Placeholder â€” ejecutar models/set_covering.py para generar este archivo
+Set Covering Solution
+========================================
+Instance         : C:\Users\jdk_l\OneDrive\Documents\UNAL\Optimización\Proyecto\opti_caso_2026\data\SetCovering_50x200.txt
+Rows             : 50
+Columns          : 200
+Status           : OPTIMAL
+Total cost       : 42.00
+Columns selected : 9
+MIP gap          : 0.0000%
+Solve time       : 0.02s
+
+Selected columns (0-indexed): [27, 49, 65, 105, 140, 145, 168, 169, 181]
