@@ -10,10 +10,10 @@
 - **Fecha:** 2026-06-14
 - **Herramienta:** Claude (Cowork mode)
 - **Tarea:** Generación de estructura de carpetas y archivos base del proyecto
-- **Prompt usado:** "Ayudame a crear la estructura de carpetas y los archivos necesarios para implementar el proyecto descrito en GUIA_PROYECTO_OPTI_ClaudeCode"
+- **Prompt usado:** "Ayudame a crear la estructura de carpetas y los archivos necesarios para implementar el proyecto descrito en GUIA_PROYECTO_OPTI.md"
 - **Resultado:** Estructura `opti_caso_2026/` creada con todos los archivos base: modelos Gurobi, datos sintéticos, análisis de sensibilidad, formulación matemática, reseñas de literatura, bitácora y README.
 - **Verificación humana:** Pendiente — revisar modelos, ajustar parámetros si es necesario, verificar que los datos sintéticos producen resultados razonables.
-- **Porcentaje estimado del total:** ~15%
+- **Porcentaje estimado del total:** ~10%
 
 ---
 
@@ -34,7 +34,7 @@
 - **Fecha:** 2026-06-14
 - **Herramienta:** Claude Code (VSCode extension)
 - **Tarea:** Adaptación temporal a la licencia **TRIAL** de Gurobi (limitada a ~2000 variables). Se añadió un interruptor `ITEM_LIMIT` (bloque "LICENSE SWITCH") a `models/bin_packing.py` y `sensitivity/sensitivity_analysis.py` para resolver un subconjunto de ítems mientras se obtiene la licencia académica, y ejecución de ambos.
-- **Prompt usado:** "Trabajaremos con la licencia trial por ahora; documenta eso. Mañana obtendremos la licencia académica en el campus. Haz una solución usando solo la licencia trial y comenta que se actualizará a una licencia de mayor capacidad mañana, para que el cambio sea fácil."
+- **Prompt usado:** "Trabajaremos con la licencia trial por ahora. Mañana obtendremos la licencia académica en el campus. Docuemnta el cambio en el código y en el README para que sea fácil volver a ejecutar con la instancia completa una vez tengamos la licencia académica."
 - **Resultado:** BPP resuelto a **óptimo** sobre los primeros **40 de 120 ítems** (15 contenedores, gap 0%); análisis de sensibilidad ejecutado sobre 40 ítems (capacidad 100→200, `results/sensitivity_capacity.png` + `sensitivity_summary.csv`). El cambio a la instancia completa requiere una sola línea: `ITEM_LIMIT = None`. Documentado en `README.md`.
 - **Verificación humana:** Pendiente — el estudiante debe (1) obtener la licencia académica mañana en el campus, (2) poner `ITEM_LIMIT = None` y reejecutar para la instancia completa de 120 ítems, (3) revisar resultados.
 - **Porcentaje estimado del total:** ~2% (modificación menor de código + ejecución)
@@ -57,9 +57,9 @@
 
 ## Resumen de uso acumulado
 
-| Entrada | Fecha | Herramienta | % estimado |
-|---------|-------|-------------|------------|
-| 1 | 2026-06-14 | Claude (Cowork) | ~15% |
-| 2 | 2026-06-14 | Claude Code | ~3% |
-| 3 | 2026-06-14 | Claude Code | ~2% |
-| **Total** | | | **~20%** |
+| Entrada   | Fecha      | Herramienta     | % estimado |
+| --------- | ---------- | --------------- | ---------- |
+| 1         | 2026-06-14 | Claude (Cowork) | ~10%       |
+| 2         | 2026-06-14 | Claude Code     | ~3%        |
+| 3         | 2026-06-14 | Claude Code     | ~2%        |
+| **Total** |            |                 | **~25%**   |
