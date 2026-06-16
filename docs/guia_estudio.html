@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Estudio — Optimización 2026-1 | UNAL</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d2e;
+    --surface2: #252840;
+    --border: #2e3250;
+    --accent: #6c8ef5;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --accent4: #f59e0b;
+    --danger: #f87171;
+    --text: #e2e8f0;
+    --muted: #8892b0;
+    --code-bg: #0d1117;
+    --r: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.75; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(15,17,23,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; gap: 6px; height: 52px; overflow-x: auto; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 12px; white-space: nowrap; padding: 4px 10px; border-radius: 20px; transition: all 0.2s; }
+  nav a:hover { background: var(--surface2); color: var(--text); }
+  nav .brand { color: var(--accent); font-weight: 700; font-size: 14px; margin-right: 8px; flex-shrink: 0; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg,#0f1117 0%,#1a1d2e 50%,#0f1117 100%); border-bottom: 1px solid var(--border); padding: 64px 24px 56px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(108,142,245,0.12),transparent); }
+  .hero h1 { font-size: clamp(24px,4vw,42px); font-weight:800; letter-spacing:-1px; background:linear-gradient(135deg,#6c8ef5,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:relative; }
+  .hero p { color:var(--muted); max-width:620px; margin:14px auto 0; font-size:15px; position:relative; }
+  .hero .meta { margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; position:relative; }
+  .badge { background:var(--surface2); border:1px solid var(--border); padding:4px 14px; border-radius:20px; font-size:12px; color:var(--muted); }
+
+  /* LAYOUT */
+  .container { max-width: 900px; margin: 0 auto; padding: 48px 24px 96px; }
+  section { margin-bottom: 56px; }
+  section h2 { font-size:22px; font-weight:700; color:var(--accent); border-left:4px solid var(--accent); padding-left:14px; margin-bottom:24px; scroll-margin-top:68px; }
+  section h3 { font-size:16px; font-weight:700; color:var(--accent2); margin:28px 0 12px; scroll-margin-top:68px; }
+  section h4 { font-size:13px; font-weight:700; color:var(--accent4); margin:20px 0 8px; text-transform:uppercase; letter-spacing:.06em; }
+  p { margin-bottom:14px; }
+
+  /* FILE REF CHIP */
+  .fref {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #12151f; border: 1px solid #2a3060;
+    border-radius: 5px; padding: 1px 8px;
+    font-family: 'Cascadia Code','Fira Code',monospace;
+    font-size: 12px; color: #7dd3fc;
+    text-decoration: none; cursor: default;
+    vertical-align: middle; margin: 0 2px;
+    white-space: nowrap;
+  }
+  .fref .ln { color: #94a3b8; font-size: 11px; }
+
+  /* CARD */
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:24px; margin:20px 0; }
+  .card.green { border-color:rgba(52,211,153,.3); background:rgba(52,211,153,.04); }
+  .card.purple { border-color:rgba(167,139,250,.3); background:rgba(167,139,250,.04); }
+  .card.amber { border-color:rgba(245,158,11,.3); background:rgba(245,158,11,.04); }
+  .card.red { border-color:rgba(248,113,113,.3); background:rgba(248,113,113,.04); }
+  .card.blue { border-color:rgba(108,142,245,.3); background:rgba(108,142,245,.04); }
+
+  /* INSIGHT */
+  .insight { background:linear-gradient(135deg,rgba(108,142,245,.08),rgba(167,139,250,.08)); border:1px solid rgba(108,142,245,.25); border-radius:var(--r); padding:18px 20px; margin:16px 0; position:relative; }
+  .insight::before { content:'💡'; position:absolute; top:16px; right:16px; font-size:18px; }
+  .insight strong { color:var(--accent); }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x:auto; margin:20px 0; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { background:var(--surface2); padding:10px 14px; text-align:left; color:var(--accent); font-weight:600; border-bottom:2px solid var(--border); }
+  td { padding:9px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,.02); }
+
+  /* MATH */
+  .math-block { background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:18px 22px; margin:14px 0; overflow-x:auto; font-size:1.05em; text-align:center; }
+
+  /* CODE */
+  code { background:var(--code-bg); color:#a78bfa; padding:2px 7px; border-radius:4px; font-family:'Cascadia Code','Fira Code',monospace; font-size:13px; }
+  pre { background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:18px; overflow-x:auto; margin:14px 0; }
+  pre code { background:none; padding:0; font-size:13px; color:#cdd6f4; }
+
+  /* CODE ANNOTATED */
+  .code-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 14px 0; }
+  .code-block-header { display:flex; align-items:center; justify-content:space-between; padding:8px 16px; background:#161b2e; border-bottom:1px solid var(--border); }
+  .code-block-title { font-size:12px; color:var(--muted); font-family:monospace; }
+  .code-block-lines { padding:16px; overflow-x:auto; }
+  .code-block-lines pre { background:none; border:none; padding:0; margin:0; }
+  .cl { display:flex; gap:10px; line-height:1.6; }
+  .cl-n { color:#4a5568; font-size:12px; min-width:28px; text-align:right; user-select:none; flex-shrink:0; padding-top:1px; }
+  .cl-c { font-family:'Cascadia Code','Fira Code',monospace; font-size:13px; color:#cdd6f4; white-space:pre; }
+  .cl-hl .cl-n { color:var(--accent4); }
+  .cl-hl .cl-c { background:rgba(245,158,11,.08); border-left:2px solid var(--accent4); padding-left:6px; color:#fde68a; }
+  .cl-ann { font-family:'Segoe UI',sans-serif; font-size:12px; color:var(--accent3); margin-left:12px; font-style:italic; }
+
+  /* KV GRID */
+  .kv-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:16px 0; }
+  .kv { background:var(--surface2); border-radius:8px; padding:14px 16px; }
+  .kv .k { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:4px; }
+  .kv .v { font-size:20px; font-weight:800; color:var(--text); }
+  .kv .v.green { color:var(--accent3); }
+  .kv .v.blue { color:var(--accent); }
+  .kv .v.purple { color:var(--accent2); }
+  .kv .v.amber { color:var(--accent4); }
+
+  /* STEPS */
+  .steps { counter-reset:step; list-style:none; margin:16px 0; }
+  .steps li { counter-increment:step; display:flex; gap:14px; align-items:flex-start; margin-bottom:16px; }
+  .steps li::before { content:counter(step); background:var(--accent); color:#fff; width:26px; height:26px; min-width:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; margin-top:2px; }
+
+  /* CMP */
+  .cmp { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+  @media(max-width:600px){ .cmp { grid-template-columns:1fr; } }
+  .cmp-card { background:var(--surface2); border-radius:var(--r); padding:20px; }
+  .cmp-card h4 { font-size:15px; margin:0 0 12px; }
+  .cmp-card.bpp h4 { color:#6c8ef5; }
+  .cmp-card.scp h4 { color:#34d399; }
+
+  /* HIGHLIGHTS */
+  .hl { color:var(--accent); font-weight:700; }
+  .hl-g { color:var(--accent3); font-weight:700; }
+  .hl-a { color:var(--accent4); font-weight:700; }
+  .hl-r { color:var(--danger); font-weight:700; }
+  .hl-p { color:var(--accent2); font-weight:700; }
+
+  hr { border:none; border-top:1px solid var(--border); margin:40px 0; }
+
+  /* REPO TREE */
+  .tree { font-family:'Cascadia Code','Fira Code',monospace; font-size:13px; line-height:2; background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:20px 24px; }
+  .tree .dir { color:#6c8ef5; font-weight:700; }
+  .tree .file { color:#cdd6f4; }
+  .tree .file a { color:#7dd3fc; text-decoration:none; }
+  .tree .file a:hover { text-decoration:underline; }
+  .tree .comment { color:#4a5568; }
+  .tree .hot { color:#34d399; }
+
+  /* SENSITIVITY CHART */
+  .sens-chart { margin:20px 0; }
+  .bar-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .bar-label { width:44px; text-align:right; font-size:12px; color:var(--muted); flex-shrink:0; }
+  .bar-track { flex:1; background:var(--surface2); border-radius:4px; height:20px; position:relative; }
+  .bar-fill { height:100%; border-radius:4px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px; }
+  .bar-val { font-size:11px; font-weight:700; color:#fff; }
+
+  /* QUESTIONS */
+  .q-grid { display:flex; flex-direction:column; gap:0; }
+  .q-item { border-bottom:1px solid var(--border); overflow:hidden; }
+  .q-item:last-child { border-bottom:none; }
+  .q-btn { width:100%; background:none; border:none; color:var(--text); cursor:pointer; padding:18px 20px; text-align:left; display:flex; align-items:center; gap:14px; font-size:14px; line-height:1.5; transition:background .15s; }
+  .q-btn:hover { background:var(--surface2); }
+  .q-num { background:var(--surface2); border:1px solid var(--border); color:var(--accent); width:32px; height:32px; min-width:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; }
+  .q-arrow { margin-left:auto; color:var(--muted); transition:transform .2s; font-size:18px; }
+  .q-btn.open .q-arrow { transform:rotate(90deg); }
+  .q-answer { display:none; padding:0 20px 20px 66px; color:var(--text); font-size:14px; line-height:1.7; border-top:1px dashed var(--border); background:rgba(108,142,245,.03); }
+  .q-answer.visible { display:block; }
+  .q-tag { display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:2px 8px; border-radius:10px; margin-bottom:8px; }
+  .tag-bpp  { background:rgba(108,142,245,.15); color:var(--accent); }
+  .tag-scp  { background:rgba(52,211,153,.15);  color:var(--accent3); }
+  .tag-teoria{ background:rgba(245,158,11,.15); color:var(--accent4); }
+  .tag-solver{ background:rgba(167,139,250,.15); color:var(--accent2); }
+  .tag-sensib{ background:rgba(248,113,113,.15); color:var(--danger); }
+  .tag-codigo{ background:rgba(125,211,252,.15); color:#7dd3fc; }
+
+  /* READING BAR */
+  .reading-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); z-index:200; transition:width .1s; }
+
+  footer { text-align:center; padding:32px; color:var(--muted); font-size:13px; border-top:1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="reading-bar" id="readingBar"></div>
+
+<nav>
+  <span class="brand">⚡ OPTI 2026-1</span>
+  <a href="#repo">Repositorio</a>
+  <a href="#fundamentos">Fundamentos</a>
+  <a href="#bpp">Bin Packing</a>
+  <a href="#scp">Set Covering</a>
+  <a href="#codigo">Código</a>
+  <a href="#literatura">Literatura</a>
+  <a href="#solver">Resultados</a>
+  <a href="#analisis">Análisis</a>
+  <a href="#sensibilidad">Sensibilidad</a>
+  <a href="#conclusiones">Conclusiones</a>
+  <a href="#preguntas">30 Preguntas</a>
+</nav>
+
+<div class="hero">
+  <h1>Guía de Estudio<br>Optimización 2026-1</h1>
+  <p>De la intuición más sencilla a la elegante solución computacional — Bin Packing & Set Covering con Gurobi</p>
+  <div class="meta">
+    <span class="badge">David Ramírez · Jaisson Machado</span>
+    <span class="badge">Universidad Nacional de Colombia</span>
+    <span class="badge">Problema 04 &amp; 07</span>
+    <span class="badge">Gurobi 13.0.2</span>
+    <span class="badge">Python 3.10+</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════════════════
+     0. ESTRUCTURA DEL REPOSITORIO
+══════════════════════════════════════════════════════ -->
+<section id="repo">
+  <h2>0. Estructura del Repositorio</h2>
+  <p>Todo el código vive bajo <code>opti_caso_2026/</code>. La organización sigue el patrón estándar de un proyecto de OR/optimización académico.</p>
+
+  <div class="tree">
+<span class="dir">opti_caso_2026/</span><br>
+│<br>
+├── <span class="dir">data/</span>  <span class="comment">                   # Instancias de OR-Library (solo lectura)</span><br>
+│   ├── <span class="file hot">BinPacking_u120_01.txt</span>   <span class="comment">  # 120 ítems, capacidad 150, óptimo 48</span><br>
+│   └── <span class="file hot">SetCovering_50x200.txt</span>   <span class="comment">  # 50 filas, 200 columnas</span><br>
+│<br>
+├── <span class="dir">models/</span>  <span class="comment">                 # Modelos Gurobi ILP</span><br>
+│   ├── <span class="file hot">bin_packing.py</span>  <span class="comment">       # BPP: carga datos + construye + resuelve + reporta</span><br>
+│   └── <span class="file hot">set_covering.py</span>  <span class="comment">      # SCP: ídem</span><br>
+│<br>
+├── <span class="dir">sensitivity/</span>  <span class="comment">            # Análisis de sensibilidad</span><br>
+│   └── <span class="file hot">sensitivity_analysis.py</span>  <span class="comment"># Barre C de 100 a 200, genera PNG + CSV</span><br>
+│<br>
+├── <span class="dir">results/</span>  <span class="comment">                # Salidas del solver (generadas al correr)</span><br>
+│   ├── <span class="file">bin_packing_solution.txt</span><br>
+│   ├── <span class="file">set_covering_solution.txt</span><br>
+│   ├── <span class="file">sensitivity_capacity.png</span><br>
+│   └── <span class="file">sensitivity_summary.csv</span><br>
+│<br>
+├── <span class="dir">docs/</span>  <span class="comment">                   # Entregables del curso</span><br>
+│   ├── <span class="dir">entrega/</span>  <span class="comment">             # Documentos PDF/MD entregados al profesor</span><br>
+│   │   ├── <span class="file">01_formulacion_matematica.md</span><br>
+│   │   ├── <span class="file">02_resenas_literatura.md</span><br>
+│   │   ├── <span class="file">03_resultados_solver.md</span><br>
+│   │   ├── <span class="file">04_analisis_resultados.md</span><br>
+│   │   ├── <span class="file">05_analisis_sensibilidad.md</span><br>
+│   │   └── <span class="file">06_conclusiones.md</span><br>
+│   └── <span class="file hot">guia_estudio.html</span>  <span class="comment">    # ← este archivo</span><br>
+│<br>
+├── <span class="dir">dashboard/</span>  <span class="comment">              # Visualizador HTML de resultados</span><br>
+│   └── <span class="file">dashboard.html</span>  <span class="comment">       # Abre en el navegador, sin servidor</span><br>
+│<br>
+├── <span class="file">CLAUDE.md</span>  <span class="comment">               # Instrucciones al agente (arquitectura, comandos)</span><br>
+├── <span class="file">bitacora_ia.md</span>  <span class="comment">          # Log obligatorio de uso de IA (máx 20%)</span><br>
+└── <span class="file">requirements.txt</span>  <span class="comment">        # gurobipy, numpy, pandas, matplotlib, jupyter</span><br>
+  </div>
+
+  <h3>Flujo de ejecución</h3>
+  <ol class="steps">
+    <li>
+      <div>
+        <strong>Datos</strong> — los archivos en <code>data/</code> son descargados de OR-Library (Beasley). Nunca se modifican.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Modelos</strong> — <code>python models/bin_packing.py</code> y <code>python models/set_covering.py</code> cargan los datos, construyen el modelo Gurobi, optimizan y escriben en <code>results/</code>.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Sensibilidad</strong> — <code>python sensitivity/sensitivity_analysis.py</code> importa <code>load_bin_packing</code> desde <code>models/</code> y barre 11 valores de capacidad, generando PNG y CSV.
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Visualización</strong> — <code>dashboard/dashboard.html</code> se abre directamente en el navegador: cero servidor, cero internet.
+      </div>
+    </li>
+  </ol>
+
+  <h3>Convención de rutas</h3>
+  <p>Todos los scripts resuelven sus rutas relativas al directorio raíz del proyecto mediante:</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">models/bin_packing.py · models/set_covering.py · sensitivity/sensitivity_analysis.py — línea 154/129/164</span></div>
+    <div class="code-block-lines">
+      <div class="cl cl-hl"><span class="cl-n">154</span><span class="cl-c">base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span><span class="cl-ann">← raíz del proyecto</span></div>
+      <div class="cl"><span class="cl-n">155</span><span class="cl-c">data_path    = os.path.join(base, "data",    "BinPacking_u120_01.txt")</span></div>
+      <div class="cl"><span class="cl-n">156</span><span class="cl-c">results_path = os.path.join(base, "results", "bin_packing_solution.txt")</span></div>
+    </div>
+  </div>
+  <p>Esto garantiza que los scripts funcionan desde cualquier directorio de trabajo — no importa desde dónde los llames.</p>
+
+  <h3>Dependencias clave</h3>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Paquete</th><th>Rol</th><th>Versión mínima</th></tr>
+    <tr><td><code>gurobipy</code></td><td>Interfaz Python al solver Gurobi (B&B, ILP)</td><td>11.0</td></tr>
+    <tr><td><code>numpy</code></td><td>Operaciones numéricas en sensitivity_analysis</td><td>1.26</td></tr>
+    <tr><td><code>matplotlib</code></td><td>Generación de la figura de sensibilidad (PNG)</td><td>3.8</td></tr>
+    <tr><td><code>pandas</code></td><td>Lectura del CSV de resultados (notebook)</td><td>2.0</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     1. FUNDAMENTOS
+══════════════════════════════════════════════════════ -->
+<section id="fundamentos">
+  <h2>1. Fundamentos — ¿Por qué programación entera?</h2>
+
+  <p>Muchos problemas del mundo real requieren decisiones discretas: ¿abre o no abre este almacén? ¿entra o no entra este ítem en esta caja? Las variables continuas de la programación lineal (LP) no capturan esa realidad. La <span class="hl">Programación Lineal Entera (ILP)</span> exige que algunas o todas las variables sean enteras —generalmente binarias (0 o 1).</p>
+
+  <div class="cmp">
+    <div class="cmp-card bpp">
+      <h4>LP (relajada)</h4>
+      <p style="font-size:13px;">Permite fracciones. Puede decir "pon 0.3 del ítem en la caja 2". Rápida, convexa, pero irreal para decisiones binarias.</p>
+    </div>
+    <div class="cmp-card scp">
+      <h4>ILP (entera)</h4>
+      <p style="font-size:13px;">Solo 0 o 1. Captura decisiones binarias reales. NP-difícil en general, pero manejable con solvers modernos como Gurobi.</p>
+    </div>
+  </div>
+
+  <h3>El método Branch-and-Bound (B&B)</h3>
+  <p>El corazón de cualquier solver de ILP. En Gurobi, todo ocurre dentro de <code>model.optimize()</code> <span class="fref">bin_packing.py <span class="ln">L101</span></span>:</p>
+  <ol class="steps">
+    <li><strong>Relajar</strong>: resuelve el LP continuo (ignora integralidad). Obtiene cota inferior (lower bound).</li>
+    <li><strong>Verificar</strong>: si la solución ya es entera, terminó. Si no, elige una variable fraccionaria, e.g. \(x=0.7\).</li>
+    <li><strong>Ramificar</strong>: crea dos subproblemas — uno con \(x \leq 0\) y otro con \(x \geq 1\).</li>
+    <li><strong>Podar</strong>: si un nodo da cota inferior peor que la mejor solución entera conocida, descártalo.</li>
+    <li><strong>Repetir</strong> hasta agotar el árbol o alcanzar el gap deseado (en nuestro caso, 0 %).</li>
+  </ol>
+
+  <div class="insight">
+    <strong>El insight clave:</strong> cuanto más fuerte (más ajustada) sea la relajación LP, menos nodos necesita explorar el B&B. Si la relajación ya es entera, el solver termina en el nodo raíz.
+  </div>
+
+  <h3>¿Qué es el MIP Gap?</h3>
+  <div class="math-block">
+    \[ \text{MIP Gap} = \frac{|\text{Mejor entero} - \text{Cota inferior}|}{|\text{Mejor entero}|} \times 100\% \]
+  </div>
+  <p>En Gurobi se lee con <code>model.MIPGap</code> <span class="fref">bin_packing.py <span class="ln">L111</span></span>. Un gap de <span class="hl-g">0.0000 %</span> certifica la optimalidad. Ambos modelos lograron este resultado.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     2. BIN PACKING
+══════════════════════════════════════════════════════ -->
+<section id="bpp">
+  <h2>2. Bin Packing Problem (BPP)</h2>
+
+  <h3>2.1 La intuición</h3>
+  <p>Tienes cajas de capacidad \(C = 150\) kg y 120 objetos de distintos pesos. Quieres meterlos todos usando la menor cantidad de cajas posible. Cada objeto va en exactamente una caja; ninguna caja puede sobrecargarse.</p>
+
+  <div class="card amber">
+    <strong>Instancia:</strong> Falkenauer u120_01 · 120 ítems · capacidad 150 · pesos ∈ [20,100] · archivo <span class="fref">data/BinPacking_u120_01.txt</span> · óptimo documentado: 48 contenedores (se corrieron 40 ítems por límite de licencia).
+  </div>
+
+  <h3>2.2 Formulación matemática</h3>
+
+  <h4>Conjuntos y parámetros</h4>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Símbolo</th><th>Significado</th></tr>
+    <tr><td>\(I = \{1,\ldots,n\}\)</td><td>Objetos a empacar</td></tr>
+    <tr><td>\(J = \{1,\ldots,n\}\)</td><td>Contenedores disponibles (cota superior: \(n\))</td></tr>
+    <tr><td>\(w_i \in \mathbb{Z}^+\)</td><td>Peso del objeto \(i\) — leído en <span class="fref">bin_packing.py <span class="ln">L33</span></span></td></tr>
+    <tr><td>\(C \in \mathbb{Z}^+\)</td><td>Capacidad por contenedor — leída en <span class="fref">bin_packing.py <span class="ln">L32</span></span></td></tr>
+  </table>
+  </div>
+
+  <h4>Variables de decisión</h4>
+  <div class="math-block">
+    \[
+    x_{ij} = \begin{cases} 1 & \text{objeto } i \to \text{contenedor } j \\ 0 & \text{en otro caso} \end{cases}
+    \quad
+    y_j = \begin{cases} 1 & \text{contenedor } j \text{ abierto} \\ 0 & \text{en otro caso} \end{cases}
+    \]
+  </div>
+
+  <p>En código — <span class="fref">bin_packing.py <span class="ln">L69–71</span></span>:</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">models/bin_packing.py — Variables de decisión</span></div>
+    <div class="code-block-lines">
+      <div class="cl cl-hl"><span class="cl-n">69</span><span class="cl-c">x = model.addVars(I, J, vtype=GRB.BINARY, name="x")</span><span class="cl-ann">← n² variables binarias x[i,j]</span></div>
+      <div class="cl cl-hl"><span class="cl-n">70</span><span class="cl-c">y = model.addVars(J,    vtype=GRB.BINARY, name="y")</span><span class="cl-ann">← n variables binarias y[j]</span></div>
+    </div>
+  </div>
+
+  <h4>Función objetivo</h4>
+  <div class="math-block">\[ \min \sum_{j \in J} y_j \]</div>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">models/bin_packing.py — Objetivo</span></div>
+    <div class="code-block-lines">
+      <div class="cl cl-hl"><span class="cl-n">74</span><span class="cl-c">model.setObjective(gp.quicksum(y[j] for j in J), GRB.MINIMIZE)</span><span class="cl-ann">← min Σ y[j]</span></div>
+    </div>
+  </div>
+
+  <h4>Restricciones</h4>
+  <div class="card">
+    <p><strong style="color:var(--accent)">(R1) Asignación única</strong></p>
+    <div class="math-block">\[ \sum_{j \in J} x_{ij} = 1 \qquad \forall i \in I \]</div>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-block-title">models/bin_packing.py L78–81</span></div>
+      <div class="code-block-lines">
+        <div class="cl cl-hl"><span class="cl-n">78</span><span class="cl-c">model.addConstrs(</span></div>
+        <div class="cl cl-hl"><span class="cl-n">79</span><span class="cl-c">    (gp.quicksum(x[i, j] for j in J) == 1 for i in I),</span><span class="cl-ann">← cada ítem en exactamente 1 bin</span></div>
+        <div class="cl"><span class="cl-n">80</span><span class="cl-c">    name="assign"</span></div>
+        <div class="cl"><span class="cl-n">81</span><span class="cl-c">)</span></div>
+      </div>
+    </div>
+
+    <p style="margin-top:16px;"><strong style="color:var(--accent)">(R2) Capacidad + enlace</strong></p>
+    <div class="math-block">\[ \sum_{i \in I} w_i\, x_{ij} \leq C\, y_j \qquad \forall j \in J \]</div>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-block-title">models/bin_packing.py L87–90</span></div>
+      <div class="code-block-lines">
+        <div class="cl cl-hl"><span class="cl-n">87</span><span class="cl-c">model.addConstrs(</span></div>
+        <div class="cl cl-hl"><span class="cl-n">88</span><span class="cl-c">    (gp.quicksum(w[i] * x[i, j] for i in I) <= C * y[j] for j in J),</span><span class="cl-ann">← capacidad Y enlace x↔y</span></div>
+        <div class="cl"><span class="cl-n">89</span><span class="cl-c">    name="capacity"</span></div>
+        <div class="cl"><span class="cl-n">90</span><span class="cl-c">)</span></div>
+      </div>
+    </div>
+
+    <p style="margin-top:16px;"><strong style="color:var(--accent4)">(R3) Ruptura de simetría</strong></p>
+    <div class="math-block">\[ y_j \geq y_{j+1} \qquad \forall j \in \{1,\ldots,n-1\} \]</div>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-block-title">models/bin_packing.py L94–97</span></div>
+      <div class="code-block-lines">
+        <div class="cl cl-hl"><span class="cl-n">94</span><span class="cl-c">model.addConstrs(</span></div>
+        <div class="cl cl-hl"><span class="cl-n">95</span><span class="cl-c">    (y[j] >= y[j + 1] for j in range(n - 1)),</span><span class="cl-ann">← fuerza orden: bins de izq a der</span></div>
+        <div class="cl"><span class="cl-n">96</span><span class="cl-c">    name="symmetry"</span></div>
+        <div class="cl"><span class="cl-n">97</span><span class="cl-c">)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>2.3 El límite de licencia: ITEM_LIMIT</h3>
+  <p>La licencia gratuita (pip) de Gurobi acepta máximo ~2000 variables. El BPP completo necesita \(120^2 + 120 = 14{,}520\) variables. La solución: reducir a 40 ítems → \(40^2 + 40 = 1{,}640\) variables.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">models/bin_packing.py — Interruptor de licencia L169</span></div>
+    <div class="code-block-lines">
+      <div class="cl"><span class="cl-n">158</span><span class="cl-c"># TRIAL license  ->  ITEM_LIMIT = 40    (40*40 + 40 = 1,640 vars &lt; 2000)</span></div>
+      <div class="cl"><span class="cl-n">159</span><span class="cl-c"># ACADEMIC license ->  ITEM_LIMIT = None  (full 120-item instance)</span></div>
+      <div class="cl cl-hl"><span class="cl-n">169</span><span class="cl-c">ITEM_LIMIT = 40</span><span class="cl-ann">← cambiar a None con licencia académica</span></div>
+    </div>
+  </div>
+
+  <h3>2.4 La cota inferior de área</h3>
+  <div class="math-block">\[ \text{LB} = \left\lceil \frac{\sum_{i \in I} w_i}{C} \right\rceil = \left\lceil \frac{2151}{150} \right\rceil = \lceil 14.34 \rceil = \mathbf{15} \]</div>
+  <p>El solver reporta exactamente 14.34 como relajación LP y cierra en 15. El óptimo iguala la cota — el empaque es tan ajustado como físicamente posible.</p>
+
+  <div class="card green">
+    <strong>Resultado:</strong> 40 ítems → <span class="hl-g">15 contenedores</span> · gap 0.0000 % · tiempo 0.09 s · ver <span class="fref">results/bin_packing_solution.txt</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     3. SET COVERING
+══════════════════════════════════════════════════════ -->
+<section id="scp">
+  <h2>3. Set Covering Problem (SCP)</h2>
+
+  <h3>3.1 La intuición</h3>
+  <p>Tienes 50 barrios y 200 posibles ubicaciones para estaciones de bomberos. Cada ubicación cubre ciertos barrios y tiene un costo. Quieres el subconjunto de estaciones de menor costo total que deje todos los barrios cubiertos.</p>
+
+  <div class="card green">
+    <strong>Instancia:</strong> 50 filas × 200 columnas · densidad ≈ 21 % (2091 incidencias) · archivo <span class="fref">data/SetCovering_50x200.txt</span> · instancia completa (sin restricción de licencia).
+  </div>
+
+  <h3>3.2 Formulación matemática</h3>
+
+  <h4>Variables y objetivo</h4>
+  <div class="math-block">\[ x_j \in \{0,1\} \qquad \min \sum_{j \in J} c_j\, x_j \]</div>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">models/set_covering.py — Variable y objetivo</span></div>
+    <div class="code-block-lines">
+      <div class="cl cl-hl"><span class="cl-n">69</span><span class="cl-c">x = model.addVars(J, vtype=GRB.BINARY, name="x")</span><span class="cl-ann">← solo n=200 variables</span></div>
+      <div class="cl cl-hl"><span class="cl-n">73</span><span class="cl-c">model.setObjective(gp.quicksum(costs[j] * x[j] for j in J), GRB.MINIMIZE)</span><span class="cl-ann">← min Σ c[j]·x[j]</span></div>
+    </div>
+  </div>
+
+  <h4>Restricción de cobertura</h4>
+  <div class="math-block">\[ \sum_{j \in A(i)} x_j \geq 1 \qquad \forall i \in I \]</div>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">models/set_covering.py — Restricción de cobertura L78–81</span></div>
+    <div class="code-block-lines">
+      <div class="cl cl-hl"><span class="cl-n">78</span><span class="cl-c">model.addConstrs(</span></div>
+      <div class="cl cl-hl"><span class="cl-n">79</span><span class="cl-c">    (gp.quicksum(x[j] for j in coverage[i]) >= 1 for i in I),</span><span class="cl-ann">← coverage[i] = A(i) en código</span></div>
+      <div class="cl"><span class="cl-n">80</span><span class="cl-c">    name="cover"</span></div>
+      <div class="cl"><span class="cl-n">81</span><span class="cl-c">)</span></div>
+    </div>
+  </div>
+
+  <h3>3.3 Cómo se leen los datos</h3>
+  <p>El formato OR-Library del SCP es más complejo que el del BPP. Usa tokenización total del archivo:</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">models/set_covering.py — load_set_covering() L30–48</span></div>
+    <div class="code-block-lines">
+      <div class="cl"><span class="cl-n">31</span><span class="cl-c">tokens = f.read().split()        # tokeniza TODO el archivo de una vez</span></div>
+      <div class="cl cl-hl"><span class="cl-n">34</span><span class="cl-c">m = int(tokens[idx]); idx += 1   # número de filas</span></div>
+      <div class="cl cl-hl"><span class="cl-n">35</span><span class="cl-c">n = int(tokens[idx]); idx += 1   # número de columnas</span></div>
+      <div class="cl"><span class="cl-n">38</span><span class="cl-c">costs = [int(tokens[idx + j]) for j in range(n)]   # n costos</span></div>
+      <div class="cl"><span class="cl-n">43</span><span class="cl-c">for i in range(m):</span></div>
+      <div class="cl"><span class="cl-n">44</span><span class="cl-c">    k = int(tokens[idx]); idx += 1  # cuántas columnas cubren fila i</span></div>
+      <div class="cl cl-hl"><span class="cl-n">45</span><span class="cl-c">    cols = [int(tokens[idx + t]) - 1 for t in range(k)]</span><span class="cl-ann">← convierte a base 0 (-1)</span></div>
+    </div>
+  </div>
+
+  <div class="card green">
+    <strong>Resultado:</strong> 9 columnas seleccionadas (27, 49, 65, 105, 140, 145, 168, 169, 181) · costo = <span class="hl-g">42</span> · gap 0.0000 % · tiempo 0.06 s · ver <span class="fref">results/set_covering_solution.txt</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     4. CÓDIGO EN DETALLE
+══════════════════════════════════════════════════════ -->
+<section id="codigo">
+  <h2>4. Código en Detalle — Patrones Comunes</h2>
+
+  <h3>4.1 Patrón de los dos modelos</h3>
+  <p>Ambos scripts siguen la misma arquitectura de 4 funciones:</p>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Función</th><th>Qué hace</th><th>Archivo / líneas</th></tr>
+    <tr><td><code>load_bin_packing()</code></td><td>Parsea OR-Library BPP → (n, C, pesos)</td><td><span class="fref">bin_packing.py <span class="ln">L24–34</span></span></td></tr>
+    <tr><td><code>solve_bin_packing()</code></td><td>Construye modelo, optimiza, reporta, guarda</td><td><span class="fref">bin_packing.py <span class="ln">L41–146</span></span></td></tr>
+    <tr><td><code>load_set_covering()</code></td><td>Parsea OR-Library SCP → (m, n, costos, cobertura)</td><td><span class="fref">set_covering.py <span class="ln">L23–49</span></span></td></tr>
+    <tr><td><code>solve_set_covering()</code></td><td>Construye modelo, optimiza, reporta, guarda</td><td><span class="fref">set_covering.py <span class="ln">L56–121</span></span></td></tr>
+  </table>
+  </div>
+
+  <h3>4.2 ¿Qué hace <code>x[j].X > 0.5</code>?</h3>
+  <p>Tras la optimización, Gurobi almacena el valor de cada variable en <code>.X</code>. Aunque las variables son declaradas binarias, los solvers internamente trabajan con punto flotante, por lo que una variable "1" puede ser 0.9999. El umbral <code>> 0.5</code> es el criterio estándar para interpretar una variable binaria como 1:</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">models/set_covering.py L96 — Extraer columnas seleccionadas</span></div>
+    <div class="code-block-lines">
+      <div class="cl cl-hl"><span class="cl-n">96</span><span class="cl-c">selected = [j for j in J if x[j].X > 0.5]</span><span class="cl-ann">← .X = valor óptimo de la variable</span></div>
+    </div>
+  </div>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">models/bin_packing.py L141–143 — Extraer asignaciones</span></div>
+    <div class="code-block-lines">
+      <div class="cl cl-hl"><span class="cl-n">141</span><span class="cl-c">items_in_bin = [i for i in I if x[i, j].X > 0.5]</span><span class="cl-ann">← ítems asignados al bin j</span></div>
+      <div class="cl"><span class="cl-n">142</span><span class="cl-c">load = sum(w[i] for i in items_in_bin)            # carga total del bin</span></div>
+      <div class="cl"><span class="cl-n">143</span><span class="cl-c">f.write(f"  Bin {j:3d}: items={items_in_bin}, load={load}/{C}\n")</span></div>
+    </div>
+  </div>
+
+  <h3>4.3 Parámetros de Gurobi usados</h3>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Parámetro</th><th>Valor</th><th>Efecto</th><th>Línea</th></tr>
+    <tr><td><code>LogToConsole</code></td><td>1 (modelos) / 0 (sensib.)</td><td>Muestra/oculta el log de Gurobi en consola</td><td><span class="fref">bin_packing.py <span class="ln">L65</span></span></td></tr>
+    <tr><td><code>TimeLimit</code></td><td>300 s (modelos) / 120 s (sensib.)</td><td>Safety limit — devuelve la mejor solución hallada hasta el momento</td><td><span class="fref">bin_packing.py <span class="ln">L65</span></span></td></tr>
+  </table>
+  </div>
+
+  <h3>4.4 Cómo sensitivity_analysis.py importa el loader de BPP</h3>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">sensitivity/sensitivity_analysis.py L20–21</span></div>
+    <div class="code-block-lines">
+      <div class="cl cl-hl"><span class="cl-n">20</span><span class="cl-c">sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "models"))</span><span class="cl-ann">← añade models/ al path</span></div>
+      <div class="cl cl-hl"><span class="cl-n">21</span><span class="cl-c">from bin_packing import load_bin_packing</span><span class="cl-ann">← reutiliza el parser sin duplicar código</span></div>
+    </div>
+  </div>
+  <p>La función parametrizada de sensibilidad tiene la misma lógica que el modelo principal, pero acepta <code>C</code> como argumento y suprime el log — <span class="fref">sensitivity_analysis.py <span class="ln">L28–74</span></span>:</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">sensitivity/sensitivity_analysis.py L28</span></div>
+    <div class="code-block-lines">
+      <div class="cl cl-hl"><span class="cl-n">28</span><span class="cl-c">def solve_bpp_with_capacity(n, w, C, time_limit=120) -> dict:</span><span class="cl-ann">← C es el parámetro libre</span></div>
+      <div class="cl"><span class="cl-n">34</span><span class="cl-c">    model.Params.LogToConsole = 0  # silencioso para el sweep</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     5. LITERATURA
+══════════════════════════════════════════════════════ -->
+<section id="literatura">
+  <h2>5. Literatura Canónica</h2>
+
+  <h3>BPP — Falkenauer (1996)</h3>
+  <div class="card blue">
+    <p><strong>Referencia:</strong> Falkenauer, E. (1996). A hybrid grouping genetic algorithm for bin packing. <em>Journal of Heuristics</em>, 2(1), 5–30.</p>
+    <ul style="margin-top:10px; padding-left:20px; font-size:14px; line-height:1.8;">
+      <li>Introduce el <strong>Grouping Genetic Algorithm (GGA)</strong>: opera sobre grupos (contenedores) como unidad, no sobre asignaciones individuales.</li>
+      <li>Define la instancia estándar <strong>u120</strong> usada en este proyecto (<span class="fref">data/BinPacking_u120_01.txt</span>): 120 ítems, cap 150, óptimo 48.</li>
+      <li>GGA supera heurísticas clásicas como <strong>First Fit Decreasing (FFD)</strong>.</li>
+      <li>La simetría del BPP (reordenar contenedores = misma solución) es la barrera principal para métodos exactos.</li>
+    </ul>
+  </div>
+
+  <h3>SCP — Beasley (1987)</h3>
+  <div class="card purple">
+    <p><strong>Referencia:</strong> Beasley, J. E. (1987). An algorithm for set covering problem. <em>European Journal of Operational Research</em>, 31(1), 85–93.</p>
+    <ul style="margin-top:10px; padding-left:20px; font-size:14px; line-height:1.8;">
+      <li>Combina <strong>relajación Lagrangiana + subgradiente</strong> para cotas duales, + búsqueda local para factibilidad primal.</li>
+      <li>Crea las instancias de OR-Library incluyendo la <strong>50×200</strong> (<span class="fref">data/SetCovering_50x200.txt</span>).</li>
+      <li>Demuestra que la relajación Lagrangiana del SCP supera a la relajación LP estándar en instancias grandes.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     6. RESULTADOS SOLVER
+══════════════════════════════════════════════════════ -->
+<section id="solver">
+  <h2>6. Resultados del Solver</h2>
+
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Modelo</th><th>Instancia</th><th>Variables</th><th>Estado</th><th>Objetivo</th><th>Gap</th><th>Tiempo</th></tr>
+    <tr>
+      <td><strong>Set Covering</strong></td><td>50×200 (completa)</td><td>200</td>
+      <td><span style="color:var(--accent3)">OPTIMAL</span></td><td>costo = <strong>42</strong></td><td>0.0000 %</td><td>0.06 s</td>
+    </tr>
+    <tr>
+      <td><strong>Bin Packing</strong></td><td>40/120 ítems</td><td>1 640</td>
+      <td><span style="color:var(--accent3)">OPTIMAL</span></td><td>bins = <strong>15</strong></td><td>0.0000 %</td><td>0.09 s</td>
+    </tr>
+  </table>
+  </div>
+
+  <div class="insight">
+    <strong>SCP — relajación LP en raíz = 42 = óptimo entero.</strong> El LP ya da solución binaria. Gurobi exploró 1 solo nodo del árbol B&B. Brecha de integralidad = 0.
+  </div>
+  <div class="insight">
+    <strong>BPP — relajación LP en raíz = 14.34.</strong> Óptimo entero = 15. La cota de área también da 15. Varios contenedores: carga 150/150 (100 %).
+  </div>
+
+  <p>El log del solver (columna "Status") se lee en el código con <span class="fref">bin_packing.py <span class="ln">L105–108</span></span>:</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">models/bin_packing.py — Decodificar estado del solver</span></div>
+    <div class="code-block-lines">
+      <div class="cl"><span class="cl-n">105</span><span class="cl-c">status = model.Status</span></div>
+      <div class="cl cl-hl"><span class="cl-n">106</span><span class="cl-c">status_map = {GRB.OPTIMAL: "OPTIMAL", GRB.SUBOPTIMAL: "SUBOPTIMAL",</span></div>
+      <div class="cl cl-hl"><span class="cl-n">107</span><span class="cl-c">              GRB.INFEASIBLE: "INFEASIBLE", GRB.TIME_LIMIT: "TIME_LIMIT"}</span><span class="cl-ann">← mapa de códigos Gurobi</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     7. ANÁLISIS
+══════════════════════════════════════════════════════ -->
+<section id="analisis">
+  <h2>7. Análisis de Resultados</h2>
+
+  <h3>7.1 Fortaleza de la relajación LP</h3>
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Indicador</th><th>Set Covering</th><th>Bin Packing (40 ítems)</th></tr>
+    <tr><td>Relajación LP raíz</td><td>42.00</td><td>14.34</td></tr>
+    <tr><td>Óptimo entero</td><td>42</td><td>15</td></tr>
+    <tr><td>Brecha integralidad</td><td><span class="hl-g">0 %</span></td><td><span class="hl-a">≈ 4.6 %</span></td></tr>
+    <tr><td>Nodos explorados</td><td>1</td><td>pocos</td></tr>
+  </table>
+  </div>
+
+  <h3>7.2 Simetría como cuello de botella del BPP</h3>
+  <p>Para 15 contenedores hay \(15! \approx 1.3 \times 10^{12}\) permutaciones equivalentes. La restricción <code>y[j] >= y[j+1]</code> en <span class="fref">bin_packing.py <span class="ln">L95</span></span> colapsa ese espacio a uno canónico.</p>
+
+  <div class="insight">
+    <strong>Lección de modelado:</strong> una sola desigualdad de ordenamiento vale más que un mejor computador. El modelado bien hecho reemplaza al cómputo bruto.
+  </div>
+
+  <h3>7.3 Densidad del SCP</h3>
+  <p>2091 incidencias en 50×200 = densidad ≈ 21 %. Solo 9 de 200 columnas cubren los 50 elementos: columnas "generalistas" de alta cobertura, costo total 42.</p>
+
+  <h3>7.4 Implicaciones de dominio</h3>
+  <div class="cmp">
+    <div class="cmp-card bpp">
+      <h4>BPP → Logística/manufactura</h4>
+      <p style="font-size:13px;">Cada contenedor evitado = un camión, caja o corte de lámina menos. Óptimo = cota de área → sin margen oculto: reducir contenedores requeriría rediseñar los objetos.</p>
+    </div>
+    <div class="cmp-card scp">
+      <h4>SCP → Localización/selección</h4>
+      <p style="font-size:13px;">9 recursos de costo 42 cubren 50 requisitos. Patrón: estaciones de emergencia, airline crew, feature selection en ML. LP fuerte → relajación rápida como guía confiable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     8. SENSIBILIDAD
+══════════════════════════════════════════════════════ -->
+<section id="sensibilidad">
+  <h2>8. Análisis de Sensibilidad — BPP</h2>
+
+  <p>Implementado en <span class="fref">sensitivity/sensitivity_analysis.py</span>. El bucle principal barre C de 100 a 200 en pasos de 10 — <span class="fref">sensitivity_analysis.py <span class="ln">L97–104</span></span>:</p>
+
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-title">sensitivity/sensitivity_analysis.py — Bucle de sweep L97–104</span></div>
+    <div class="code-block-lines">
+      <div class="cl cl-hl"><span class="cl-n">97</span><span class="cl-c">capacities = list(range(100, 201, 10))   # [100, 110, ..., 200]</span></div>
+      <div class="cl"><span class="cl-n">99</span><span class="cl-c">for C in capacities:</span></div>
+      <div class="cl cl-hl"><span class="cl-n">102</span><span class="cl-c">    res = solve_bpp_with_capacity(n, w, C)  # resuelve a óptimo</span><span class="cl-ann">← llama al modelo parametrizado</span></div>
+      <div class="cl"><span class="cl-n">103</span><span class="cl-c">    results.append(res)</span></div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Capacidad C</th><th>Contenedores</th><th>Tiempo (s)</th><th>Gap</th></tr>
+    <tr><td>100</td><td>23</td><td>0.03</td><td>0 %</td></tr>
+    <tr><td>110</td><td>21</td><td>0.02</td><td>0 %</td></tr>
+    <tr><td>120</td><td>19</td><td>0.13</td><td>0 %</td></tr>
+    <tr><td>130</td><td>17</td><td>0.42</td><td>0 %</td></tr>
+    <tr><td>140</td><td>16</td><td>0.03</td><td>0 %</td></tr>
+    <tr><td>150</td><td>15</td><td>0.03</td><td>0 %</td></tr>
+    <tr><td>160</td><td>14</td><td>0.03</td><td>0 %</td></tr>
+    <tr><td>170</td><td>13</td><td>0.03</td><td>0 %</td></tr>
+    <tr><td>180</td><td><span class="hl-a">12</span></td><td><span class="hl-r">2.27 ⚠</span></td><td>0 %</td></tr>
+    <tr><td>190</td><td><span class="hl-a">12</span></td><td>0.03</td><td>0 %</td></tr>
+    <tr><td>200</td><td>11</td><td>0.03</td><td>0 %</td></tr>
+  </table>
+  </div>
+
+  <h4 style="margin-top:24px;">Contenedores vs. Capacidad</h4>
+  <div class="sens-chart" id="sensChart"></div>
+
+  <div class="card amber">
+    <h4>(a) Respuesta estructural — casi lineal</h4>
+    <p>Al doblar C de 100 a 200, contenedores caen 23 → 11 (−52%), siguiendo de cerca \(\lceil 2151/C \rceil\). <strong>Meseta en C=180 y C=190 (ambos 12)</strong>: los pesos indivisibles impiden aprovechar el espacio extra.</p>
+  </div>
+  <div class="card red">
+    <h4>(b) Costo computacional — NO monótono</h4>
+    <p>Pico en C=180: 2.27 s (≈75× la mediana). Ocurre cuando la solución entera queda al filo de la cota fraccionaria — el B&B debe descartar el contenedor de más. Los resultados se guardan en <span class="fref">results/sensitivity_capacity.png</span> y <span class="fref">results/sensitivity_summary.csv</span> — <span class="fref">sensitivity_analysis.py <span class="ln">L145–155</span></span>.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     9. CONCLUSIONES
+══════════════════════════════════════════════════════ -->
+<section id="conclusiones">
+  <h2>9. Conclusiones</h2>
+  <ol class="steps">
+    <li><strong>Ambos modelos alcanzaron gap 0 %:</strong> SCP (costo 42, 9 columnas) y BPP (15 contenedores, 40 ítems).</li>
+    <li><strong>La fortaleza de la relajación LP explica el comportamiento computacional:</strong> LP=IP en SCP (1 nodo); LP&lt;IP en BPP (depende de B&B).</li>
+    <li><strong>Ruptura de simetría <code>y[j] >= y[j+1]</code> fue decisiva</strong> en el BPP: evita explorar 15! permutaciones equivalentes con una sola línea de código <span class="fref">bin_packing.py <span class="ln">L95</span></span>.</li>
+    <li><strong>Análisis de sensibilidad — dos capas:</strong> estructural (−52 % contenedores al doblar C, mesetas) y computacional (picos hasta 75× la mediana en capacidades de frontera).</li>
+    <li><strong>Modelado &gt; cómputo bruto:</strong> formulación fuerte + ruptura de simetría supera a hardware más potente.</li>
+  </ol>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     10. BANCO DE 30 PREGUNTAS
+══════════════════════════════════════════════════════ -->
+<section id="preguntas">
+  <h2>10. Banco de 30 Preguntas Posibles</h2>
+  <p style="color:var(--muted); margin-bottom:24px;">Haz clic para revelar la respuesta. Las preguntas de código incluyen referencia exacta al archivo y la línea.</p>
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div class="q-grid" id="questions"></div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  Guía de Estudio — Optimización 2026-1 · Universidad Nacional de Colombia<br>
+  David Ramírez · Jaisson Machado Bautista · Actualizada 16 de junio de 2026
+</footer>
+
+<script>
+/* ── Reading progress ── */
+window.addEventListener('scroll', () => {
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('readingBar').style.width = (window.scrollY / total * 100) + '%';
+});
+
+/* ── Sensitivity chart ── */
+const data = [
+  {c:100,bins:23,time:0.03},{c:110,bins:21,time:0.02},{c:120,bins:19,time:0.13},
+  {c:130,bins:17,time:0.42},{c:140,bins:16,time:0.03},{c:150,bins:15,time:0.03},
+  {c:160,bins:14,time:0.03},{c:170,bins:13,time:0.03},{c:180,bins:12,time:2.27},
+  {c:190,bins:12,time:0.03},{c:200,bins:11,time:0.03},
+];
+const maxBins = 23;
+const chart = document.getElementById('sensChart');
+data.forEach(d => {
+  const pct = (d.bins / maxBins) * 100;
+  const spike = d.time > 1;
+  const color = spike
+    ? 'linear-gradient(90deg,#f87171,#f59e0b)'
+    : 'linear-gradient(90deg,#6c8ef5,#a78bfa)';
+  chart.innerHTML += `
+    <div class="bar-row">
+      <div class="bar-label">C=${d.c}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${color};">
+          <span class="bar-val">${d.bins}${spike?' ⚠ '+d.time+'s':''}</span>
+        </div>
+      </div>
+    </div>`;
+});
+
+/* ── Questions ── */
+const questions = [
+  // ── FORMULACIÓN ──
+  {
+    tag:'bpp', tagLabel:'BPP',
+    q:'¿Cuál es la función objetivo del BPP y qué representan las variables de decisión?',
+    a:`La FO minimiza el número de contenedores: <strong>min Σ y[j]</strong> (<code>bin_packing.py L74</code>). Las variables son: <strong>x[i,j] ∈ {0,1}</strong> — objeto i en contenedor j, y <strong>y[j] ∈ {0,1}</strong> — contenedor j abierto. Se crean en <code>L69–70</code> con <code>model.addVars(I, J, vtype=GRB.BINARY)</code>. Total: n² + n variables binarias. Para 40 ítems: 1 640 variables.`
+  },
+  {
+    tag:'scp', tagLabel:'SCP',
+    q:'¿Cuál es la función objetivo del SCP y qué representan sus variables?',
+    a:`FO: <strong>min Σ c[j]·x[j]</strong> (<code>set_covering.py L73</code>). Solo hay una variable por columna: <strong>x[j] ∈ {0,1}</strong>, creada en <code>L69</code>. Para la instancia 50×200 son 200 variables binarias — órdenes de magnitud menos que el BPP.`
+  },
+  {
+    tag:'bpp', tagLabel:'BPP',
+    q:'¿Por qué la restricción de capacidad del BPP también funciona como restricción de enlace?',
+    a:`La restricción <code>Σ w[i]·x[i,j] <= C·y[j]</code> (<code>bin_packing.py L88</code>) hace dos cosas: si y[j]=0 (contenedor cerrado), el lado derecho es 0, forzando x[i,j]=0 para todo i — ningún ítem puede ir a un contenedor cerrado. Si y[j]=1 la capacidad se aplica normalmente. No necesita una restricción separada x[i,j] ≤ y[j].`
+  },
+  {
+    tag:'bpp', tagLabel:'BPP',
+    q:'¿Por qué la ruptura de simetría y[j] ≥ y[j+1] es tan importante en el BPP?',
+    a:`Sin ella, cualquier permutación de las etiquetas de 15 contenedores produce la misma solución — hay 15! ≈ 1.3×10¹² relabelings equivalentes. La restricción (<code>bin_packing.py L95</code>) fuerza un orden canónico: los contenedores se "llenan" de izquierda a derecha. Esto colapsa el árbol B&B de billones de nodos a decenas. Es la lección de modelado más transferible del proyecto.`
+  },
+  {
+    tag:'teoria', tagLabel:'Teoría',
+    q:'¿Qué es el MIP Gap y qué certifica un gap de 0.0000 %?',
+    a:`MIP Gap = |mejor_entero − cota_inf| / |mejor_entero| × 100 %. Se lee con <code>model.MIPGap</code> (<code>bin_packing.py L111</code>). Un gap de 0 % certifica que no existe solución de menor valor objetivo — el óptimo global está garantizado. Ambos modelos lograron esto en décimas de segundo.`
+  },
+  {
+    tag:'teoria', tagLabel:'Teoría',
+    q:'¿Cómo funciona el Branch-and-Bound que Gurobi ejecuta al llamar model.optimize()?',
+    a:`B&B opera en ciclo: (1) relaja el ILP a LP continuo → cota inferior. (2) si la solución ya es entera, terminó. (3) elige variable fraccionaria x=0.7 y crea dos subproblemas (x≤0, x≥1). (4) poda ramas cuya cota inferior supera el mejor entero conocido. Todo esto ocurre dentro de <code>model.optimize()</code> (<code>bin_packing.py L101</code>). Cuanto más ajustada la relajación LP, menos nodos explora el árbol.`
+  },
+  {
+    tag:'scp', tagLabel:'SCP',
+    q:'¿Qué significa que la relajación LP del SCP tenga brecha de integralidad 0?',
+    a:`Que al resolver el LP continuo (variables en [0,1]), la solución óptima ya toma valores en {0,1}. En términos geométricos, la formulación del SCP tiene un polítopo con vértices enteros en esta instancia. Gurobi confirmó: relajación raíz = 42 = óptimo entero → 1 solo nodo B&B explorado. Resolución en 0.06 s. El código en <code>set_covering.py L84-85</code> llama a <code>model.optimize()</code> y luego lee el resultado.`
+  },
+  {
+    tag:'bpp', tagLabel:'BPP',
+    q:'¿Cuál es la cota inferior de área del BPP y cómo se verificó en el proyecto?',
+    a:`LB = ⌈Σw_i / C⌉. Para 40 ítems: Σw_i = 2151, C = 150, LB = ⌈14.34⌉ = 15. El solver reportó la relajación LP en raíz = 14.34 y cerró en 15 — el óptimo iguala la cota, demostrando que el empaque es tan ajustado como físicamente posible. Varios contenedores tienen carga 150/150 (100 %). Para 120 ítems: Σw = 6917, LB = ⌈6917/150⌉ = 47, pero el óptimo documentado es 48 — una brecha de 1 que ilustra la dificultad real del BPP.`
+  },
+  {
+    tag:'literatura', tagLabel:'Literatura',
+    q:'¿Cuál es la instancia de referencia del BPP y quién la definió?',
+    a:`La instancia <strong>u120_01</strong> fue definida por Falkenauer (1996) en su artículo sobre el GGA. Está almacenada en <code>data/BinPacking_u120_01.txt</code> en formato OR-Library. Parámetros: 120 ítems, capacidad 150, pesos uniformes en [20,100], óptimo conocido = 48 contenedores. Es benchmark estándar desde la publicación del artículo.`
+  },
+  {
+    tag:'literatura', tagLabel:'Literatura',
+    q:'¿Qué aportó Beasley (1987) al Set Covering Problem?',
+    a:`Beasley propuso combinar relajación Lagrangiana (dualizando las restricciones de cobertura) con el método de subgradiente para obtener cotas duales ajustadas, más búsqueda local para factibilidad primal. Demostró que la relajación Lagrangiana supera a la LP estándar en cotas para instancias grandes. También creó el conjunto OR-Library incluyendo la instancia 50×200 usada en este proyecto (<code>data/SetCovering_50x200.txt</code>).`
+  },
+  // ── CÓDIGO ──
+  {
+    tag:'codigo', tagLabel:'Código',
+    q:'¿Qué hace exactamente la expresión <code>x[j].X > 0.5</code> al extraer la solución?',
+    a:`Tras <code>model.optimize()</code>, Gurobi almacena el valor de cada variable en el atributo <code>.X</code> (<code>set_covering.py L96</code>). Aunque las variables se declararon binarias, internamente el solver trabaja con punto flotante — una variable "1" puede ser 0.9999. El umbral <code>&gt; 0.5</code> es el criterio estándar para interpretar x[j] como seleccionado. Se aplica igual en el BPP: <code>if x[i, j].X > 0.5</code> (<code>bin_packing.py L141</code>).`
+  },
+  {
+    tag:'codigo', tagLabel:'Código',
+    q:'¿Por qué ITEM_LIMIT = 40 en el BPP y qué ocurriría al poner ITEM_LIMIT = None?',
+    a:`La licencia pip/trial de Gurobi acepta máximo ~2000 variables. 120 ítems necesitan 120²+120=14 520 variables — excede el límite. Con 40 ítems: 40²+40=1640 variables &lt; 2000 (<code>bin_packing.py L169</code>). Al poner <code>ITEM_LIMIT = None</code> (<code>L163</code>), se resuelve la instancia completa de 120 ítems, que requiere licencia académica o WLS. El mismo interruptor existe en <code>sensitivity_analysis.py L178</code>.`
+  },
+  {
+    tag:'codigo', tagLabel:'Código',
+    q:'¿Cómo carga los datos el parser del BPP (<code>load_bin_packing</code>) y qué formato tiene el archivo?',
+    a:`El archivo OR-Library BPP (<code>data/BinPacking_u120_01.txt</code>) tiene: línea 1 = número de casos de prueba (1), luego por caso: una línea header "n_items capacidad óptimo", seguida de n_items pesos uno por línea. El parser (<code>bin_packing.py L24–34</code>) lee línea a línea con filtrado de blancos, extrae n, C, y una lista de pesos. Retorna <code>(n_items, capacity, weights)</code>.`
+  },
+  {
+    tag:'codigo', tagLabel:'Código',
+    q:'¿Cómo importa <code>sensitivity_analysis.py</code> el parser del BPP sin duplicar código?',
+    a:`Usa manipulación del sys.path (<code>sensitivity_analysis.py L20–21</code>): <code>sys.path.insert(0, ".../models")</code> añade la carpeta models/ al path de Python, permitiendo <code>from bin_packing import load_bin_packing</code>. Así reutiliza el parser sin copiar código. La función parametrizable <code>solve_bpp_with_capacity(n, w, C)</code> (<code>L28</code>) acepta C como argumento libre y tiene <code>LogToConsole=0</code> para no inundar la consola en el sweep de 11 escenarios.`
+  },
+  {
+    tag:'codigo', tagLabel:'Código',
+    q:'¿Qué hace <code>gp.quicksum()</code> y por qué se usa en vez de <code>sum()</code>?',
+    a:`<code>gp.quicksum()</code> es la versión de Gurobi para construir expresiones lineales (<code>LinExpr</code>) de forma eficiente. A diferencia del <code>sum()</code> de Python, que crea objetos intermedios en cada iteración, <code>quicksum</code> acumula la expresión de forma interna optimizada. Se usa en la FO (<code>bin_packing.py L74</code>), en las restricciones de asignación (<code>L79</code>) y capacidad (<code>L88</code>), y en el SCP (<code>set_covering.py L73, L79</code>).`
+  },
+  {
+    tag:'codigo', tagLabel:'Código',
+    q:'¿Cómo genera el script de sensibilidad la figura de 3 paneles y dónde la guarda?',
+    a:`En <code>sensitivity_analysis.py L113–146</code>: usa <code>plt.subplots(1, 3, figsize=(15,5))</code> para crear 3 subplots — (1) bins vs C (línea azul), (2) tiempo vs C (barras naranjas), (3) MIP gap vs C (línea roja). Guarda con <code>plt.savefig(plot_path, dpi=150)</code> en <code>results/sensitivity_capacity.png</code>. Adicionalmente escribe un CSV en <code>results/sensitivity_summary.csv</code> (<code>L150–156</code>).`
+  },
+  {
+    tag:'codigo', tagLabel:'Código',
+    q:'¿Por qué se usa <code>os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</code> para resolver rutas?',
+    a:`Esta expresión — en <code>bin_packing.py L154</code>, <code>set_covering.py L129</code> y <code>sensitivity_analysis.py L164</code> — obtiene el directorio raíz del proyecto independientemente del directorio de trabajo actual. <code>__file__</code> es la ruta absoluta del script. El primer <code>dirname</code> sube un nivel (models/ → proyecto/). El segundo <code>dirname</code> no aplica para models/, pero sí para sensitivity/ → proyecto/. Esto garantiza que <code>python models/bin_packing.py</code> funcione desde cualquier directorio.`
+  },
+  // ── ANÁLISIS Y SENSIBILIDAD ──
+  {
+    tag:'sensib', tagLabel:'Sensibilidad',
+    q:'¿Qué reveló el análisis de sensibilidad sobre la relación entre C y el número de contenedores?',
+    a:`Al variar C de 100 a 200, contenedores caen 23→11 (−52%), de forma casi monótona y proporcional a ⌈2151/C⌉. Sin embargo, hay una <strong>meseta en C=180 y C=190</strong>, ambos con 12 contenedores: ampliar la capacidad no siempre compra un contenedor menos, porque los pesos indivisibles de los ítems impiden aprovechar el espacio extra.`
+  },
+  {
+    tag:'sensib', tagLabel:'Sensibilidad',
+    q:'¿Por qué el tiempo de solución fue no monótono y a qué se debe el pico en C=180?',
+    a:`El tiempo es no monótono porque la dificultad del B&B depende de cuán cerca está la cota fraccionaria del entero. En C=180, la cota continua es 2151/180≈11.95, muy cercana a 12, obligando al solver a explorar más nodos para descartar 11. El tiempo alcanzó 2.27 s (≈75× la mediana de 0.03 s). En capacidades "cómodas" el redondeo basta y el solver cierra en el nodo raíz. Los tiempos se guardan en <code>results/sensitivity_summary.csv</code>.`
+  },
+  {
+    tag:'sensib', tagLabel:'Sensibilidad',
+    q:'¿Cuál es la implicación práctica del análisis de sensibilidad para un gestor de logística?',
+    a:`Quien pueda elegir el tamaño del contenedor debería evitar capacidades "de frontera" como C=180. Esas capacidades tienen doble desventaja: (1) no producen ahorro adicional de contenedores respecto a la capacidad anterior (meseta), y (2) son las más costosas de optimizar (pico de tiempo). La sensibilidad no es solo sobre cuántos contenedores se usan, sino sobre cuánto cuesta la decisión misma.`
+  },
+  // ── TEORÍA AVANZADA ──
+  {
+    tag:'teoria', tagLabel:'Teoría',
+    q:'¿Cuál es la diferencia entre LP, ILP y la relajación LP de un ILP?',
+    a:`LP (Programación Lineal): variables continuas, resoluble en tiempo polinomial. ILP: algunas/todas variables enteras, NP-difícil en general. La <em>relajación LP</em> de un ILP es el mismo problema pero ignorando la integralidad — se usa como cota inferior en el B&B. Si la relajación LP ya da solución entera (caso del SCP), el problema se resuelve en el nodo raíz. Si la brecha es amplia (BPP), el B&B debe trabajar más.`
+  },
+  {
+    tag:'teoria', tagLabel:'Teoría',
+    q:'¿Por qué ambos problemas son NP-difíciles pero Gurobi los resuelve en décimas de segundo?',
+    a:`NP-hard describe el peor caso en instancias arbitrarias, no estas instancias específicas. En el SCP, la relajación LP da solución entera exacta → termina en 1 nodo. En el BPP, la ruptura de simetría colapsa el árbol B&B. Además, Gurobi incorpora presolve (simplificación del modelo antes de resolver), cuts (desigualdades válidas que ajustan la relajación), y heurísticas de warm-start, reduciendo el trabajo en órdenes de magnitud sobre instancias de tamaño moderado.`
+  },
+  {
+    tag:'teoria', tagLabel:'Teoría',
+    q:'¿Qué es la relajación Lagrangiana y cuándo supera a la relajación LP estándar?',
+    a:`La relajación Lagrangiana dualiza restricciones complicadas moviéndolas a la FO con multiplicadores λ, penalizando su violación. El problema resultante es más fácil. Supera a la relajación LP cuando las restricciones dualizadas tienen estructura especial que produce cotas más ajustadas. Beasley (1987) demostró esto para el SCP: al dualizar las restricciones de cobertura, las cotas son mejores que las del LP estándar con menor costo computacional en instancias grandes (400×4000).`
+  },
+  {
+    tag:'solver', tagLabel:'Solver',
+    q:'¿Cuáles son los posibles estados de terminación de Gurobi y cuándo aparece cada uno?',
+    a:`Los estados principales están mapeados en <code>bin_packing.py L106–108</code>: <strong>OPTIMAL</strong> — encontró y certificó el óptimo global (gap=0). <strong>SUBOPTIMAL</strong> — encontró una solución factible pero no la óptima (raro en ILP). <strong>INFEASIBLE</strong> — no existe solución que satisfaga todas las restricciones. <strong>TIME_LIMIT</strong> — se alcanzó el TimeLimit=300 s sin certificar el óptimo; la mejor solución hallada se reporta con su gap actual.`
+  },
+  {
+    tag:'solver', tagLabel:'Solver',
+    q:'¿Qué hace el parámetro TimeLimit y cuándo sería relevante en este proyecto?',
+    a:`<code>model.Params.TimeLimit = 300</code> (<code>bin_packing.py L65</code>, <code>set_covering.py L65</code>) limita el solver a 5 minutos. Si se excede, devuelve la mejor solución entera encontrada hasta ese momento con su MIP gap actual (estado TIME_LIMIT). En este proyecto nunca se alcanzó — ambos modelos terminaron en &lt;0.1 s. Sería relevante al correr el BPP completo (120 ítems) con licencia académica, donde la exploración podría tardar más.`
+  },
+  {
+    tag:'bpp', tagLabel:'BPP',
+    q:'¿Qué es el Grouping Genetic Algorithm (GGA) de Falkenauer y en qué mejora al GA clásico?',
+    a:`En un GA clásico para BPP, el cromosoma codifica la asignación de cada ítem a un bin — alta simetría. El GGA de Falkenauer (1996) opera sobre <strong>grupos (bins) como unidad básica</strong>, reduciendo la simetría del espacio de búsqueda y mejorando la convergencia. Supera a heurísticas como First Fit Decreasing (FFD). Este enfoque inspiró las técnicas de ruptura de simetría en modelos ILP exactos — incluyendo la restricción <code>y[j] >= y[j+1]</code> de este proyecto.`
+  },
+  {
+    tag:'scp', tagLabel:'SCP',
+    q:'¿Cuántas y cuáles columnas conforman la solución óptima del SCP y qué dice eso sobre la estructura del problema?',
+    a:`Se seleccionaron <strong>9 columnas</strong> de 200 (4.5 %): índices 27, 49, 65, 105, 140, 145, 168, 169, 181 (base 0), en <code>results/set_covering_solution.txt</code>. Costo total = 42. Que el 4.5% de las columnas cubra el 100% de las filas indica columnas "generalistas" de alta cobertura en una matriz con densidad ≈21 %. El modelo prefiere pocas columnas baratas y muy cubrientes sobre muchas columnas especializadas — comportamiento esperado cuando la matriz es relativamente densa.`
+  },
+  {
+    tag:'codigo', tagLabel:'Código',
+    q:'¿Cómo parsea <code>load_set_covering()</code> el formato OR-Library del SCP, y qué retorna?',
+    a:`El formato SCP tiene: "m n" (filas, columnas), luego n costos, luego por cada fila: k (cuántas columnas la cubren) seguido de k índices de columna en base 1. El parser (<code>set_covering.py L30–48</code>) tokeniza TODO el archivo con <code>f.read().split()</code> y avanza un índice manual. Línea clave: <code>cols = [int(tokens[idx+t]) - 1 for t in range(k)]</code> (<code>L45</code>) convierte a base 0 restando 1. Retorna <code>(m, n, costs, coverage)</code> donde <code>coverage[i]</code> es la lista de columnas que cubren la fila i.`
+  },
+  {
+    tag:'teoria', tagLabel:'Teoría',
+    q:'¿Cuál es la lección de modelado más importante del proyecto?',
+    a:`Que <strong>el modelado pesa tanto como el algoritmo</strong>. Se evidenció de tres formas: (1) La restricción <code>y[j] >= y[j+1]</code> (<code>bin_packing.py L95</code>) eliminó billones de soluciones equivalentes con una línea. (2) La formulación directa del SCP produce LP con brecha 0 — resuelto en 1 nodo. (3) El interruptor ITEM_LIMIT (<code>bin_packing.py L169</code>) mitiga la limitación de licencia sin alterar la validez metodológica. "En programación entera el modelado pesa tanto como el algoritmo, y reportar cuánto cuesta una solución es tan informativo como la solución misma."`
+  },
+  {
+    tag:'sensib', tagLabel:'Sensibilidad',
+    q:'¿Cuál es la diferencia entre la dificultad estructural y la dificultad computacional del BPP revelada por el análisis de sensibilidad?',
+    a:`La dificultad <strong>estructural</strong> es sobre cuántos contenedores se necesitan: cae monotónicamente con C, siguiendo de cerca la cota ⌈Σw/C⌉, con mesetas donde los pesos indivisibles impiden mejorar. La dificultad <strong>computacional</strong> (tiempo de solución) es no monótona: explota en puntos donde la solución entera queda al filo de la cota fraccionaria (C=180: 2.27 s vs mediana 0.03 s). Esta distinción es invisible si solo se reportan los resultados finales — requirió el análisis de sensibilidad paramétrico de <code>sensitivity_analysis.py</code>.`
+  },
+];
+
+const qGrid = document.getElementById('questions');
+questions.forEach((item, i) => {
+  const div = document.createElement('div');
+  div.className = 'q-item';
+  div.innerHTML = `
+    <button class="q-btn" onclick="toggleQ(this,${i})">
+      <div class="q-num">${i+1}</div>
+      <div style="flex:1">${item.q}</div>
+      <div class="q-arrow">›</div>
+    </button>
+    <div class="q-answer" id="ans-${i}">
+      <span class="q-tag tag-${item.tag}">${item.tagLabel}</span>
+      <p style="margin-top:8px;">${item.a}</p>
+    </div>`;
+  qGrid.appendChild(div);
+});
+
+function toggleQ(btn, idx) {
+  const ans = document.getElementById(`ans-${idx}`);
+  const isOpen = ans.classList.contains('visible');
+  document.querySelectorAll('.q-answer').forEach(a => a.classList.remove('visible'));
+  document.querySelectorAll('.q-btn').forEach(b => b.classList.remove('open'));
+  if (!isOpen) {
+    ans.classList.add('visible');
+    btn.classList.add('open');
+    btn.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+}
+</script>
+</body>
+</html>

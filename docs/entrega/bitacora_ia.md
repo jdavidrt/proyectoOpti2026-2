@@ -41,20 +41,6 @@
 
 ---
 
-## Entrada 4
-
-<!-- Copiar y completar esta plantilla en cada nueva interacción con IA -->
-
-- **Fecha:** YYYY-MM-DD
-- **Herramienta:** (Claude / ChatGPT / Copilot / otro)
-- **Tarea:**
-- **Prompt usado:**
-- **Resultado:**
-- **Verificación humana:**
-- **Porcentaje estimado del total:**
-
----
-
 ## Resumen de uso acumulado
 
 | Entrada   | Fecha      | Herramienta     | % estimado |
@@ -62,4 +48,4 @@
 | 1         | 2026-06-14 | Claude (Cowork) | ~10%       |
 | 2         | 2026-06-14 | Claude Code     | ~3%        |
 | 3         | 2026-06-14 | Claude Code     | ~2%        |
-| **Total** |            |                 | **~25%**   |
+| **Total** |            |                 | **~15%**   |
