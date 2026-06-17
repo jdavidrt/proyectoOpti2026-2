@@ -28,6 +28,49 @@
   nav { position: sticky; top: 0; z-index: 100; background: rgba(15,17,23,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; gap: 6px; height: 52px; overflow-x: auto; }
   nav a { color: var(--muted); text-decoration: none; font-size: 12px; white-space: nowrap; padding: 4px 10px; border-radius: 20px; transition: all 0.2s; }
   nav a:hover { background: var(--surface2); color: var(--text); }
+
+  /* SUSTENTACIÓN */
+  .sust-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 20px 0; }
+  @media(max-width:680px){ .sust-grid { grid-template-columns: 1fr; } }
+  .sust-card { border-radius: var(--r); padding: 20px; }
+  .sust-card.q  { background: rgba(108,142,245,.07); border: 1px solid rgba(108,142,245,.25); }
+  .sust-card.pq { background: rgba(245,158,11,.07);  border: 1px solid rgba(245,158,11,.25); }
+  .sust-card.s  { background: rgba(52,211,153,.07);  border: 1px solid rgba(52,211,153,.25); }
+  .sust-card h5 { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px; }
+  .sust-card.q  h5 { color: var(--accent); }
+  .sust-card.pq h5 { color: var(--accent4); }
+  .sust-card.s  h5 { color: var(--accent3); }
+  .sust-card p  { font-size: 13px; line-height: 1.65; margin: 0; }
+
+  .hilo { counter-reset: hilo; list-style: none; margin: 0; }
+  .hilo li { counter-increment: hilo; display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; border-bottom: 1px dashed var(--border); }
+  .hilo li:last-child { border-bottom: none; }
+  .hilo li::before { content: counter(hilo); background: linear-gradient(135deg,var(--accent),var(--accent2)); color: #fff; width: 24px; height: 24px; min-width: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; margin-top: 2px; }
+  .hilo .hl-q  { color: var(--accent);  font-weight: 700; }
+  .hilo .hl-r  { color: var(--accent3); font-weight: 700; }
+  .hilo .hl-w  { color: var(--accent4); font-weight: 700; }
+
+  .alert-box { background: linear-gradient(135deg,rgba(248,113,113,.08),rgba(245,158,11,.06)); border: 1px solid rgba(248,113,113,.35); border-radius: var(--r); padding: 20px 22px; margin: 20px 0; }
+  .alert-box strong { color: var(--danger); }
+
+  .trifecta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; margin: 20px 0; }
+  @media(max-width:600px){ .trifecta { grid-template-columns: 1fr; } }
+  .trifecta-col { padding: 20px; }
+  .trifecta-col:not(:last-child) { border-right: 1px solid var(--border); }
+  .trifecta-col h5 { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 12px; }
+  .trifecta-col ul { list-style: none; font-size: 13px; line-height: 1.8; }
+  .trifecta-col ul li::before { content: '→ '; color: var(--muted); }
+  .tc-q  { background: rgba(108,142,245,.05); } .tc-q  h5 { color: var(--accent); }
+  .tc-pq { background: rgba(245,158,11,.05);  } .tc-pq h5 { color: var(--accent4); }
+  .tc-s  { background: rgba(52,211,153,.05);  } .tc-s  h5 { color: var(--accent3); }
+
+  .script-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--r); padding: 22px 24px; margin: 14px 0; font-size: 14px; line-height: 1.8; }
+  .script-block .sp-label { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+  .script-block .sp-label.p { color: var(--accent4); }
+  .script-block .sp-label.r { color: var(--accent3); }
+  .script-block .sp-text { color: var(--text); }
+  .script-block .sp-aside { color: var(--muted); font-style: italic; font-size: 12px; }
+  .script-sep { border: none; border-top: 1px dashed var(--border); margin: 16px 0; }
   nav .brand { color: var(--accent); font-weight: 700; font-size: 14px; margin-right: 8px; flex-shrink: 0; }
 
   /* HERO */
@@ -192,6 +235,7 @@
   <a href="#sensibilidad">Sensibilidad</a>
   <a href="#conclusiones">Conclusiones</a>
   <a href="#preguntas">30 Preguntas</a>
+  <a href="#sustentacion" style="color:var(--danger);font-weight:700;">🎤 Sustentación</a>
 </nav>
 
 <div class="hero">
@@ -750,6 +794,280 @@
   <div class="card" style="padding:0; overflow:hidden;">
     <div class="q-grid" id="questions"></div>
   </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     11. SUSTENTACIÓN ORAL
+══════════════════════════════════════════════════════ -->
+<section id="sustentacion">
+  <h2>11. Cómo Sustentar Este Proyecto</h2>
+
+  <div class="alert-box">
+    <strong>Inteligencia de campo:</strong> el profesor pide un <em>análisis completo del modelo</em> — qué se hizo, por qué, qué significa. Si hablas con claridad: 5 minutos. Si hablas sin ella: 10. La clave no es memorizar términos técnicos; es poder contar cada modelo con tus propias palabras, en términos cotidianos, porque mezclar los dos en una sola respuesta genérica le dice al profesor que no los distingues.
+  </div>
+
+  <!-- GLOSARIO RÁPIDO -->
+  <h3>Primero: qué significa cada término que vas a usar</h3>
+  <p>El profesor usa el lenguaje de la optimización, no la jerga de los papers. Antes de ensayar las respuestas, entiende qué quiere decir cada cosa con palabras de todos los días:</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <tr><th>Término técnico</th><th>Qué significa en palabras simples</th></tr>
+    <tr><td><strong>Contenedor / caja</strong> (llamado <em>bin</em> en inglés)</td><td>La caja física donde metes los objetos. En el problema de empaque, queremos usar la menor cantidad posible.</td></tr>
+    <tr><td><strong>Variable de decisión</strong></td><td>Una pregunta que le hacemos al modelo: ¿va el objeto 3 a la caja 2? Responde con 0 (no) o 1 (sí).</td></tr>
+    <tr><td><strong>Función objetivo</strong></td><td>Lo que queremos minimizar o maximizar. En el empaque: minimizar el número de cajas. En la cobertura: minimizar el costo total.</td></tr>
+    <tr><td><strong>Restricción</strong></td><td>Una regla que la solución no puede violar. Por ejemplo: "ninguna caja puede sobrecargarse" o "cada barrio debe quedar cubierto".</td></tr>
+    <tr><td><strong>Solución óptima certificada / diferencia cero</strong> (llamada <em>gap 0%</em>)</td><td>El programa demostró matemáticamente que no existe solución mejor. No es solo "encontré una buena solución" — es "es imposible mejorarla".</td></tr>
+    <tr><td><strong>Relajar el problema</strong> (llamado <em>relajación LP</em>)</td><td>Fingir que las variables pueden tomar valores intermedios, no solo 0 o 1. Por ejemplo, poner "0.4 del objeto" en una caja. Es imposible en la vida real, pero sirve para calcular un límite inferior de referencia.</td></tr>
+    <tr><td><strong>Límite inferior teórico</strong> (llamado <em>cota inferior</em>)</td><td>El mínimo posible que cualquier solución puede alcanzar. Si el resultado del modelo iguala este límite, no puede haber nada mejor.</td></tr>
+    <tr><td><strong>Árbol de decisiones del programa</strong> (llamado <em>Branch and Bound</em>)</td><td>La estrategia que usa Gurobi para explorar posibles soluciones: parte el problema en subproblemas más pequeños, descarta ramas imposibles y encuentra el óptimo.</td></tr>
+    <tr><td><strong>Simetría del problema de empaque</strong></td><td>Si tenemos 15 cajas, podemos cambiarles el nombre (caja 1 pasa a ser la 3, etc.) y la solución sigue siendo la misma. Eso confunde al programa porque explora millones de soluciones idénticas.</td></tr>
+    <tr><td><strong>Condición de orden</strong> (llamada <em>ruptura de simetría</em>)</td><td>Una regla que le dice al modelo "llena las cajas de izquierda a derecha". Esto evita que el programa explore todas esas soluciones equivalentes.</td></tr>
+    <tr><td><strong>Instancia del problema</strong></td><td>El conjunto de datos específico que resolvemos: 40 objetos con sus pesos, o 50 filas con 200 columnas. Viene de una biblioteca pública de problemas de referencia (OR-Library).</td></tr>
+    <tr><td><strong>Gurobi</strong></td><td>El programa de optimización (solver) que usamos para resolver el modelo. Requiere una licencia; usamos la versión gratuita con límite de tamaño.</td></tr>
+    <tr><td><strong>Análisis de sensibilidad</strong></td><td>Variar un parámetro del problema (en nuestro caso, la capacidad de las cajas) y observar cómo cambia la solución y el tiempo de resolución.</td></tr>
+  </table>
+  </div>
+
+  <!-- NARRATIVA -->
+  <h3>El hilo conductor — cuéntalo en 60 segundos</h3>
+  <p>La primera frase que digas enmarca toda la sustentación. Practica esto hasta que salga sin mirar:</p>
+
+  <div class="script-block">
+    <div class="sp-label r">Narrativa base</div>
+    <div class="sp-text">"Resolvimos dos problemas clásicos de optimización. El primero es el problema de empaque en cajas: tenemos objetos de distintos pesos y cajas de capacidad fija, y queremos empacarlos todos usando la menor cantidad de cajas posible. El segundo es el problema de cobertura de conjuntos: tenemos un universo de elementos que deben quedar cubiertos, y tenemos varias opciones disponibles con distintos costos — queremos cubrir todo gastando lo mínimo.<br><br>
+    Los dos son problemas que matemáticamente son muy difíciles de escalar, pero los resolvimos a optimalidad certificada en décimas de segundo. La razón no es que el computador sea potente — es que los modelamos bien. En el problema de cobertura, cuando relajamos el modelo y permitimos soluciones fraccionarias, el resultado ya es entero — el programa no necesita explorar nada más. En el problema de empaque, las cajas son todas iguales y renombrarlas da la misma solución, así que agregamos una regla que obliga al programa a llenarlas de izquierda a derecha, lo que elimina millones de combinaciones redundantes."</div>
+  </div>
+
+  <hr>
+
+  <!-- ══ BPP ══ -->
+  <h3 style="color:var(--accent); font-size:19px; margin-top:32px;">
+    📦 Problema de Empaque en Cajas (Bin Packing) — Problema 04
+  </h3>
+
+  <h4>Trifecta — Empaque en cajas</h4>
+  <div class="trifecta">
+    <div class="trifecta-col tc-q">
+      <h5>¿Qué se hizo?</h5>
+      <ul>
+        <li>Dos preguntas al modelo: ¿va el objeto <em>i</em> a la caja <em>j</em>? ¿está la caja <em>j</em> abierta?</li>
+        <li>Objetivo: minimizar el número de cajas abiertas</li>
+        <li>Condición 1: cada objeto va en exactamente una caja</li>
+        <li>Condición 2: ninguna caja se puede sobrecargar; si está cerrada, no puede recibir nada</li>
+        <li>Condición 3: las cajas se llenan de izquierda a derecha (evita explorar el mismo resultado con nombres distintos)</li>
+        <li>Se resolvió con 40 objetos de los 120 disponibles, por límite de la licencia gratuita</li>
+        <li>Se varió la capacidad de cada caja entre 100 y 200 unidades de peso para ver cómo cambia la solución</li>
+      </ul>
+    </div>
+    <div class="trifecta-col tc-pq">
+      <h5>¿Por qué?</h5>
+      <ul>
+        <li>Necesitamos <em>dos</em> preguntas porque la primera (¿qué va dónde?) no cuenta cajas — solo la segunda lo hace</li>
+        <li>La condición 2 hace dos cosas a la vez: limita el peso máximo Y asegura que una caja cerrada no reciba nada</li>
+        <li>Sin la condición de orden, 15 cajas abiertas tienen 15 factorial (≈1.3 billones) de formas equivalentes de etiquetarse — el programa las exploraría todas inútilmente</li>
+        <li>Con 120 objetos se generarían 14 520 variables, excediendo el límite de ~2000 de la licencia gratuita. Con 40 objetos: 1 640 variables — dentro del límite</li>
+        <li>Variamos la capacidad de la caja porque es el parámetro que puede controlar un operador logístico en la práctica</li>
+      </ul>
+    </div>
+    <div class="trifecta-col tc-s">
+      <h5>¿Qué significa?</h5>
+      <ul>
+        <li>Resultado: 15 cajas — exactamente igual al mínimo teórico posible (el peso total, 2151, dividido entre la capacidad, 150, redondeado hacia arriba da 15)</li>
+        <li>No puede haber 14 cajas: 14 × 150 = 2100 y el peso total es 2151 — físicamente no cabe</li>
+        <li>La diferencia entre el problema relajado (14.34 cajas) y el real (15) es pequeña pero no se puede ignorar</li>
+        <li>La condición de orden fue decisiva: sin ella el programa no habría terminado en tiempo útil</li>
+        <li>Al doblar la capacidad, el número de cajas cae un 52% — casi en proporción inversa, pero hay tramos donde ampliar la caja no ahorra ni una unidad</li>
+        <li>El tiempo de solución tiene picos inesperados en ciertas capacidades — la dificultad no es el tamaño, es la aritmética entre los pesos y la capacidad</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>Preguntas más probables — Empaque en cajas</h4>
+
+  <div class="script-block">
+    <div class="sp-label p">Empaque · Pregunta 1</div>
+    <div class="sp-text sp-aside">"¿Por qué necesitaron dos tipos de preguntas al modelo y no una sola?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">La primera pregunta — ¿va el objeto <em>i</em> a la caja <em>j</em>? — solo modela la asignación. Pero el objetivo del problema es <em>contar cajas abiertas</em>, no objetos asignados. Si solo tuviéramos esa primera pregunta, no habría nada que minimizar. La segunda pregunta — ¿está la caja <em>j</em> en uso? — es la que le permite al modelo contar cuántas cajas se necesitan. Y además, la condición de capacidad las conecta: si una caja está "cerrada" (respuesta = 0), su lado derecho se vuelve cero y ningún objeto puede entrar ahí.</div>
+  </div>
+
+  <div class="script-block">
+    <div class="sp-label p">Empaque · Pregunta 2</div>
+    <div class="sp-text sp-aside">"¿Por qué la condición de capacidad también controla si una caja está abierta o cerrada? ¿No necesitan una condición separada para eso?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">No. La condición dice: "el peso total en la caja <em>j</em> no puede superar la capacidad multiplicada por si la caja está abierta". Si la caja está cerrada (la segunda pregunta responde 0), el lado derecho de esa condición se vuelve cero — entonces el peso también debe ser cero, lo que impide que cualquier objeto entre. Está haciendo dos trabajos con una sola restricción: limitar el peso máximo y bloquear cajas cerradas. Agregar una condición separada sería redundante.</div>
+  </div>
+
+  <div class="script-block">
+    <div class="sp-label p">Empaque · Pregunta 3</div>
+    <div class="sp-text sp-aside">"¿Qué hace exactamente la condición de orden de las cajas y qué pasaría si la quitamos?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">Esa condición fuerza que las cajas se "llenen" de izquierda a derecha: si la caja número 6 está abierta, la caja número 5 también debe estarlo. Esto elimina el problema de los nombres: si tenemos los mismos objetos en las mismas 15 cajas, da igual llamarlas 1,2,3... que 3,1,2... — es la misma solución. Sin la condición de orden, el programa exploraría las 15 factorial, que son aproximadamente 1.3 billones, de formas distintas de etiquetar las mismas cajas. Con la condición, solo existe un orden válido y el programa termina en segundos.</div>
+  </div>
+
+  <div class="script-block">
+    <div class="sp-label p">Empaque · Pregunta 4</div>
+    <div class="sp-text sp-aside">"¿Por qué el resultado son 15 cajas y no 14? ¿Cómo saben que no pueden ser menos?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">Porque el peso total de todos los objetos es 2 151 unidades y cada caja aguanta 150. Si divides 2 151 entre 150 te da 14.34 — necesitas al menos 15 cajas para que quepa todo el peso, no importa cómo lo acomodes. Con 14 cajas tendrías espacio para 2 100 unidades, y los objetos pesan 2 151 — físicamente no entra. El programa además confirmó esto: cuando resolvió la versión relajada (donde se pueden "partir" objetos), el resultado fue exactamente 14.34. Y cuando resolvió el problema real, el resultado fue 15, con diferencia certificada de cero entre ambos — o sea, no puede existir algo mejor.</div>
+  </div>
+
+  <div class="script-block">
+    <div class="sp-label p">Empaque · Pregunta 5</div>
+    <div class="sp-text sp-aside">"¿Por qué solo resolvieron 40 objetos y no los 120 originales? ¿No invalida eso el resultado?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">La versión gratuita de Gurobi tiene un límite de aproximadamente 2 000 variables. El problema con los 120 objetos genera 14 520 variables — lo supera. Con 40 objetos: 1 640 variables — cabe dentro del límite. La metodología es idéntica: mismo modelo, mismas condiciones, misma lógica. Lo que no podemos hacer es reportar el resultado de los 120 objetos. Sí podemos decir que el mínimo teórico para los 120 objetos sería 47 cajas, y que el mejor resultado conocido en la literatura es 48 — una diferencia de exactamente 1 caja, que es lo que hace famoso a este problema. Tenemos un interruptor listo en el código para correrlo completo cuando activemos la licencia académica.</div>
+  </div>
+
+  <div class="script-block">
+    <div class="sp-label p">Empaque · Pregunta 6</div>
+    <div class="sp-text sp-aside">"¿Qué les enseñó variar la capacidad de las cajas?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">Nos enseñó dos cosas distintas, no una. La primera es esperada: cuando aumentamos la capacidad de 100 a 200 unidades, el número de cajas cae de 23 a 11 — una reducción del 52%, casi proporcional. Pero hay tramos donde ampliar la capacidad no ahorra ni una caja: con capacidades de 180 y 190, el resultado es el mismo, 12 cajas. Eso pasa porque los pesos de los objetos son fijos y hay espacios que no se pueden llenar aunque la caja sea más grande.<br><br>
+    La segunda cosa no la esperábamos tan marcada: el tiempo que tarda el programa en encontrar la solución no baja con la capacidad — tiene picos inesperados. Con capacidad 180, tardó 2.27 segundos, que es 75 veces más que el tiempo típico de 0.03 segundos. Eso ocurre porque en ese punto el mínimo teórico (11.95 cajas) está casi en el borde de 12, y el programa tiene que trabajar más para confirmar que no puede hacerlo con 11. La dificultad del problema de empaque no está en cuántos objetos hay — está en cómo sus pesos se relacionan con la capacidad de las cajas.</div>
+  </div>
+
+  <hr>
+
+  <!-- ══ SCP ══ -->
+  <h3 style="color:var(--accent3); font-size:19px; margin-top:32px;">
+    🗂️ Problema de Cobertura de Conjuntos (Set Covering) — Problema 07
+  </h3>
+
+  <h4>Trifecta — Cobertura de conjuntos</h4>
+  <div class="trifecta">
+    <div class="trifecta-col tc-q">
+      <h5>¿Qué se hizo?</h5>
+      <ul>
+        <li>Una sola pregunta al modelo: ¿se selecciona la opción <em>j</em>?</li>
+        <li>Objetivo: minimizar el costo total de las opciones seleccionadas</li>
+        <li>Condición: cada uno de los 50 elementos debe quedar cubierto por al menos una opción seleccionada</li>
+        <li>No se necesitó condición de orden (las opciones ya son todas distintas entre sí)</li>
+        <li>Se resolvió la instancia completa: 50 elementos, 200 opciones disponibles</li>
+        <li>La matriz de cobertura tiene un 21% de sus entradas activas (2 091 de 10 000)</li>
+      </ul>
+    </div>
+    <div class="trifecta-col tc-pq">
+      <h5>¿Por qué?</h5>
+      <ul>
+        <li>Una sola pregunta porque la decisión es simple: selecciono esta opción o no</li>
+        <li>La condición dice "al menos una" porque si dos opciones cubren el mismo elemento, no hay problema — la sobrecobertura no tiene costo adicional</li>
+        <li>No hay condición de orden porque cada opción tiene costo y cobertura distintos — no hay dos opciones intercambiables que generen el mismo resultado</li>
+        <li>Con solo 200 variables, la licencia gratuita no es problema</li>
+        <li>Los costos distintos por columna hacen que el modelo naturalmente prefiera las opciones más baratas y más cubrientes</li>
+      </ul>
+    </div>
+    <div class="trifecta-col tc-s">
+      <h5>¿Qué significa?</h5>
+      <ul>
+        <li>Solo 9 de las 200 opciones disponibles son suficientes para cubrir los 50 elementos, con un costo total de 42</li>
+        <li>Hay opciones "generalistas" que cubren muchos elementos a la vez — el modelo las prefiere</li>
+        <li>Cuando relajamos el problema y permitimos fracciones, el resultado ya es entero (42) — exactamente igual al resultado real. El programa solo necesitó explorar el primer punto del árbol de decisiones</li>
+        <li>Por eso tardó solo 0.06 segundos, aunque el problema es NP-difícil en general</li>
+        <li>Esta propiedad (que la versión relajada ya da una solución entera) hace que el problema de cobertura escale mucho mejor que el de empaque en instancias grandes</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>Preguntas más probables — Cobertura de conjuntos</h4>
+
+  <div class="script-block">
+    <div class="sp-label p">Cobertura · Pregunta 1</div>
+    <div class="sp-text sp-aside">"¿Por qué el problema de cobertura se resolvió tan rápido si es igualmente difícil en teoría?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">Porque cuando relajamos el problema — es decir, cuando fingimos que podemos seleccionar "pedazos" de opciones en lugar de opciones enteras — la respuesta que obtenemos ya es entera por sí sola. No hay ninguna fracción. Eso significa que el programa no necesita explorar ninguna ramificación: la primera solución que encuentra ya es la óptima. En el log del programa vimos exactamente eso: la versión relajada dio un costo de 42.00, y la versión real también dio 42. El programa exploró un solo punto y terminó en 0.06 segundos.<br><br>
+    En contraste, en el problema de empaque la versión relajada da 14.34 cajas — una fracción que no existe en la realidad — y el programa tiene que seguir explorando hasta llegar a 15.</div>
+  </div>
+
+  <div class="script-block">
+    <div class="sp-label p">Cobertura · Pregunta 2</div>
+    <div class="sp-text sp-aside">"¿Por qué la condición dice que cada elemento debe cubrirse por 'al menos una' opción y no por 'exactamente una'?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">Porque en cobertura de conjuntos la sobrecobertura es válida y gratuita. Si seleccionamos la opción 27 y la opción 49, y ambas cubren el elemento 5, ese elemento queda cubierto dos veces — no hay ningún problema con eso. Lo único que no puede ocurrir es que algún elemento quede sin cubrir ninguna vez. Si la condición dijera "exactamente una", estaríamos obligando al modelo a que cada elemento quede cubierto por una sola opción, lo que haría el problema innecesariamente difícil y restrictivo sin ninguna razón de negocio.</div>
+  </div>
+
+  <div class="script-block">
+    <div class="sp-label p">Cobertura · Pregunta 3</div>
+    <div class="sp-text sp-aside">"¿Por qué en el problema de cobertura no necesitaron la condición de orden que sí pusieron en el de empaque?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">Porque el problema de cobertura no tiene el problema de los nombres intercambiables. En el empaque, las cajas son todas iguales entre sí: puedo llamar "caja 1" a cualquiera de las 15 que abro y la solución sigue siendo la misma. Eso genera redundancia. En la cobertura, cada opción tiene su propio costo y cubre su propio conjunto de elementos — la opción 27 no es la misma que la opción 49, tienen costos distintos y cubren elementos distintos. No existe ninguna manera de intercambiar dos opciones y obtener la misma solución. Por eso el problema ya es naturalmente distinto para cada combinación y no necesita esa condición adicional.</div>
+  </div>
+
+  <div class="script-block">
+    <div class="sp-label p">Cobertura · Pregunta 4</div>
+    <div class="sp-text sp-aside">"¿Qué significa que solo 9 de 200 opciones basten para cubrir los 50 elementos?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">Significa que en ese conjunto de 200 opciones hay algunas que son muy "cubrientes" — cubren muchos elementos a la vez y tienen costos razonables. El modelo las identificó y seleccionó el 4.5% de las opciones disponibles para cubrir el 100% de los requerimientos. Eso tiene una interpretación práctica directa: si esto fuera un problema de ubicación de estaciones de bomberos, bastarían 9 ubicaciones bien elegidas para cubrir los 50 barrios. Agregar más estaciones solo subiría el costo sin mejorar la cobertura. Esta es la propiedad que hace tan útil el problema de cobertura en logística de emergencias, diseño de rutas y selección de recursos.</div>
+  </div>
+
+  <div class="script-block">
+    <div class="sp-label p">Cobertura · Pregunta 5</div>
+    <div class="sp-text sp-aside">"¿Qué implica que la versión relajada ya dé una solución entera, para instancias más grandes?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta</div>
+    <div class="sp-text">Implica que el problema de cobertura es mucho más escalable que el de empaque. En instancias con miles de opciones y cientos de elementos — que existen en la biblioteca pública de Beasley, con matrices de hasta 400 filas y 4 000 columnas — la versión relajada se resuelve muy rápido y en muchos casos ya da una solución entera directamente, como ocurrió aquí. Cuando no lo hace, la diferencia entre la solución relajada y la real es pequeña. Eso significa que incluso sin resolver el problema exacto, la versión relajada da una guía muy confiable de cuánto puede costar la solución óptima.</div>
+  </div>
+
+  <hr>
+
+  <!-- COMPARACIÓN DIRECTA -->
+  <h3>Pregunta trampa — te comparan los dos modelos</h3>
+  <p>Esta es la más peligrosa. Si los tienes mezclados, se nota de inmediato.</p>
+
+  <div class="script-block">
+    <div class="sp-label p">Pregunta de contraste</div>
+    <div class="sp-text sp-aside">"¿Por qué el problema de empaque fue más difícil de resolver que el de cobertura, si el de empaque tiene menos variables?"</div>
+    <hr class="script-sep">
+    <div class="sp-label r">Respuesta — distingue los dos sin mezclarlos</div>
+    <div class="sp-text">Son difíciles por razones completamente distintas, y en estas instancias se comportan de forma opuesta — eso es exactamente lo que los hace interesantes juntos.<br><br>
+    <strong>El problema de cobertura se resuelve rápido</strong> porque cuando relajamos el modelo y permitimos fracciones, el resultado ya es entero. El programa no necesita explorar nada más: un solo punto, 0.06 segundos, resultado certificado.<br><br>
+    <strong>El problema de empaque tiene dos dificultades que el de cobertura no tiene.</strong> Primera: cuando relajamos el modelo, el resultado es 14.34 cajas — una fracción que no existe en la realidad. El programa tiene que seguir buscando hasta confirmar que 15 es el mínimo posible. Segunda: las cajas son todas iguales entre sí. Con 15 cajas abiertas, puedo cambiarles el nombre de 1.3 billones de maneras distintas y la solución sigue siendo idéntica. El programa exploraría todo eso inútilmente. Por eso agregamos la condición de llenar de izquierda a derecha, que elimina esa redundancia.<br><br>
+    En el problema de cobertura no existe ese problema de los nombres: cada opción tiene costo y cobertura únicos, así que no hay dos opciones intercambiables.</div>
+  </div>
+
+  <hr>
+
+  <!-- LO QUE NO DEBES HACER -->
+  <h3>Lo que NO debes hacer</h3>
+  <div class="card red" style="margin-top:0;">
+    <ul style="padding-left:20px; font-size:14px; line-height:2.1; margin:0;">
+      <li><strong>Dar la misma respuesta para los dos problemas.</strong> "Ambos se resuelven de igual forma" es incorrecto — se comportan de forma opuesta en casi todo: uno necesita condición de orden y el otro no, uno la versión relajada ya da entero y el otro no, uno tiene muchas más variables que el otro.</li>
+      <li><strong>Decir solo la fórmula.</strong> El profesor ya la conoce. Lo que quiere escuchar es qué pasa si quitas esa condición, o por qué ese número y no otro.</li>
+      <li><strong>Decir "el programa lo resolvió".</strong> Explica qué configuraste tú: el límite de objetos por la licencia, el tiempo máximo de ejecución, la condición de orden en el empaque, cómo se leen los datos.</li>
+      <li><strong>Quedarte en los números.</strong> "15 cajas, costo 42" no es un análisis. El análisis es: "15 cajas porque el peso total no cabe en 14" y "costo 42 porque cuando relajamos el modelo el resultado ya era entero".</li>
+      <li><strong>Decir que son difíciles y por eso tardan mucho.</strong> El problema de cobertura tardó 0.06 segundos. La razón es el modelado, no que el problema sea fácil — es que la formulación es fuerte.</li>
+      <li><strong>Esconder la limitación de la licencia.</strong> Es real, está documentada, tiene una solución lista en el código (cambiar una línea) y tiene la cota teórica para los 120 objetos calculada. Mencionarla demuestra que entiendes el problema, no que lo ocultaste.</li>
+    </ul>
+  </div>
+
+  <!-- MAPA MENTAL -->
+  <h3>Mapa mental — el hilo de los dos problemas</h3>
+  <div class="card" style="padding:20px;">
+    <ol class="hilo">
+      <li><div><span class="hl-q">Qué resolvimos</span> → dos problemas de optimización: empacar objetos en el menor número posible de cajas, y cubrir todos los elementos al menor costo posible con opciones disponibles.</div></li>
+      <li><div><span class="hl-q">Preguntas del modelo de empaque</span> → dos por objeto y caja: ¿va el objeto <em>i</em> en la caja <em>j</em>? ¿está la caja <em>j</em> abierta? Con 40 objetos: 1 640 variables en total (límite de licencia).</div></li>
+      <li><div><span class="hl-q">Preguntas del modelo de cobertura</span> → una por opción: ¿se selecciona la opción <em>j</em>? Con 200 opciones: 200 variables en total.</div></li>
+      <li><div><span class="hl-q">Condición clave del empaque</span> → la de capacidad también cierra las cajas: si una caja está cerrada, su peso máximo disponible es cero. La condición de orden (llenar de izquierda a derecha) elimina 1.3 billones de formas equivalentes de etiquetar las cajas.</div></li>
+      <li><div><span class="hl-q">Condición clave de la cobertura</span> → cada elemento debe aparecer en al menos una opción seleccionada. No se necesita condición de orden porque cada opción ya es única.</div></li>
+      <li><div><span class="hl-r">Resultado del empaque</span> → 15 cajas, igual al mínimo teórico posible (peso total ÷ capacidad, redondeado arriba). Diferencia certificada = 0. Tiempo: 0.09 segundos.</div></li>
+      <li><div><span class="hl-r">Resultado de la cobertura</span> → 9 opciones de 200 cubren los 50 elementos, con costo de 42. La versión relajada ya daba 42 — el programa terminó en un solo punto. Tiempo: 0.06 segundos.</div></li>
+      <li><div><span class="hl-r">Contraste central</span> → en cobertura, relajar el problema ya da la respuesta correcta (fuerte). En empaque, relajar da una fracción imposible y además hay millones de soluciones con nombres distintos pero iguales en valor (débil + simétrico).</div></li>
+      <li><div><span class="hl-w">Sensibilidad del empaque</span> → al doblar la capacidad de las cajas, el número de cajas cae un 52% — casi proporcional, con mesetas donde ampliar no ayuda. Pero el tiempo tiene picos inesperados en capacidades donde el mínimo teórico está justo en el borde de un número entero.</div></li>
+      <li><div><span class="hl-w">La lección</span> → cómo se formula el problema importa tanto como el programa que lo resuelve. La condición de orden del empaque y la formulación directa de la cobertura hacen posible resolver en décimas de segundo problemas que en teoría son muy difíciles de escalar.</div></li>
+    </ol>
+  </div>
+
 </section>
 
 </div><!-- /container -->
